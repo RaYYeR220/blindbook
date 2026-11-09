@@ -18,9 +18,11 @@
 
 pub mod engine;
 pub mod price;
+pub mod quote;
 
 pub use engine::{cross, Batch, Fill, Lot, Market, Order, Params, Rebate, Side, SkipReason};
 pub use price::{midpoint, Price, PriceError};
+pub use quote::{verify_quote, QuoteError, VerifiedQuote, ONE_CLICK_MANAGER_PUB_KEY};
 
 /// Token amounts in the token's smallest unit.
 pub type Amount = u128;

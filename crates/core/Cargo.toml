@@ -10,3 +10,6 @@ serde.workspace = true
 serde_json.workspace = true
 primitive-types.workspace = true
 thiserror.workspace = true
+ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
+sha2 = "0.10"
+bs58 = "0.5"
