@@ -1,0 +1,26 @@
+# build
+target/
+node_modules/
+.next/
+out/
+dist/
+*.wasm
+!/contracts/res/*.wasm
+.turbo/
+.vercel/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+keys/
+credentials/
+
+# local
+.DS_Store
+*.log
+coverage/
+.idea/
+.vscode/

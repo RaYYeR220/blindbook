@@ -1,0 +1,12 @@
+[package]
+name = "blindbook-core"
+version = "0.1.0"
+description = "Batch crossing engine for Blindbook: midpoint matching of pre-signed lots"
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+primitive-types.workspace = true
+thiserror.workspace = true
