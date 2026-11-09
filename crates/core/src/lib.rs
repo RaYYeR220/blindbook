@@ -18,6 +18,7 @@
 
 pub mod engine;
 pub mod envelope;
+pub mod intent;
 pub mod price;
 pub mod quote;
 
