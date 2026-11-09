@@ -12,6 +12,22 @@ importers:
         specifier: ^4.20.0
         version: 4.23.15
 
+  agents/house:
+    dependencies:
+      '@blindbook/client':
+        specifier: workspace:*
+        version: link:../../packages/client
+      '@blindbook/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.19.2
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+
   packages/client:
     dependencies:
       '@blindbook/sdk':

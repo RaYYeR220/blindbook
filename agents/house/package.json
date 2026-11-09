@@ -1,0 +1,20 @@
+{
+  "name": "@blindbook/house",
+  "version": "0.1.0",
+  "private": true,
+  "description": "House liquidity and keeper for Blindbook: rests small lots on both sides at the midpoint and cranks batches when orders arrive",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@blindbook/client": "workspace:*",
+    "@blindbook/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
