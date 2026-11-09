@@ -2,8 +2,13 @@
   "name": "blindbook",
   "private": true,
   "packageManager": "pnpm@9.15.0",
+  "type": "module",
   "scripts": {
     "test": "pnpm -r test",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "baseline": "tsx scripts/baseline.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0"
   }
 }

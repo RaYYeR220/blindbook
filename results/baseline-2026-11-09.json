@@ -1,0 +1,172 @@
+{
+  "measured_at": "2026-11-09T14:33:41.633Z",
+  "source": "1Click dry quotes, EXACT_INPUT, INTENTS deposit and recipient",
+  "market": "wnear-usdc",
+  "reference": {
+    "bid": 3.5316949,
+    "ask": 3.555799631471,
+    "mid": 3.543747
+  },
+  "rows": [
+    {
+      "side": "sell",
+      "near": 10,
+      "usd_at_mid": 35.43,
+      "cost_bps": 31.09,
+      "cost_usd": 0.11,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 100,
+      "usd_at_mid": 354.37,
+      "cost_bps": 25.96,
+      "cost_usd": 0.92,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 1000,
+      "usd_at_mid": 3543.74,
+      "cost_bps": 20.13,
+      "cost_usd": 7.13,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 10000,
+      "usd_at_mid": 35437.47,
+      "cost_bps": 31.22,
+      "cost_usd": 110.64,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 50000,
+      "usd_at_mid": 177187.36,
+      "cost_bps": 49.31,
+      "cost_usd": 873.71,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 100000,
+      "usd_at_mid": 354374.72,
+      "cost_bps": 76.39,
+      "cost_usd": 2707.07,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 150000,
+      "usd_at_mid": 531562.08,
+      "cost_bps": 101.76,
+      "cost_usd": 5409.18,
+      "route": "ok"
+    },
+    {
+      "side": "sell",
+      "near": 200000,
+      "usd_at_mid": 708749.45,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    },
+    {
+      "side": "sell",
+      "near": 250000,
+      "usd_at_mid": 885936.81,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    },
+    {
+      "side": "sell",
+      "near": 500000,
+      "usd_at_mid": 1771873.63,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    },
+    {
+      "side": "buy",
+      "near": 10,
+      "usd_at_mid": 35.43,
+      "cost_bps": 40.94,
+      "cost_usd": 0.15,
+      "route": "ok"
+    },
+    {
+      "side": "buy",
+      "near": 100,
+      "usd_at_mid": 354.37,
+      "cost_bps": 50.74,
+      "cost_usd": 1.8,
+      "route": "ok"
+    },
+    {
+      "side": "buy",
+      "near": 1000,
+      "usd_at_mid": 3543.74,
+      "cost_bps": 37.45,
+      "cost_usd": 13.27,
+      "route": "ok"
+    },
+    {
+      "side": "buy",
+      "near": 10000,
+      "usd_at_mid": 35437.47,
+      "cost_bps": 66.41,
+      "cost_usd": 235.34,
+      "route": "ok"
+    },
+    {
+      "side": "buy",
+      "near": 50000,
+      "usd_at_mid": 177187.36,
+      "cost_bps": 78.8,
+      "cost_usd": 1396.24,
+      "route": "ok"
+    },
+    {
+      "side": "buy",
+      "near": 100000,
+      "usd_at_mid": 354374.72,
+      "cost_bps": 100.78,
+      "cost_usd": 3571.39,
+      "route": "ok"
+    },
+    {
+      "side": "buy",
+      "near": 150000,
+      "usd_at_mid": 531562.08,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    },
+    {
+      "side": "buy",
+      "near": 200000,
+      "usd_at_mid": 708749.45,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    },
+    {
+      "side": "buy",
+      "near": 250000,
+      "usd_at_mid": 885936.81,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    },
+    {
+      "side": "buy",
+      "near": 500000,
+      "usd_at_mid": 1771873.63,
+      "cost_bps": null,
+      "cost_usd": null,
+      "route": "unavailable: No liquidity available"
+    }
+  ]
+}
