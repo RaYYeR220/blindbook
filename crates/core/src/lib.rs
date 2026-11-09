@@ -17,6 +17,7 @@
 //! and how the surplus between the two limits is split.
 
 pub mod engine;
+pub mod envelope;
 pub mod price;
 pub mod quote;
 
