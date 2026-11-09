@@ -178,13 +178,11 @@ export class Blindbook {
       lots: drafts.map((draft) => ({ draft, signed: signNep413(draft.payload, this.seed) })),
     });
     const sealed = sealOrderBody(await this.matcherKey(), body);
-    const tx = await this.call(
-      this.network.pool,
-      "submit_order",
-      { market: market.id, sealed_b64: sealed },
-      50,
-      opts.depositYocto ?? 50_000_000_000_000_000_000_000n, // 0.05 NEAR, refunded on ingestion
-    );
+    const sealedLen = Math.floor((sealed.length * 3) / 4) - (sealed.endsWith("==") ? 2 : sealed.endsWith("=") ? 1 : 0);
+    const deposit =
+      opts.depositYocto ?? BigInt(await this.view<string>(this.network.pool, "get_order_deposit", { bytes: sealedLen }));
+    // the deposit covers the order's storage and is refunded once the matcher ingests it
+    const tx = await this.call(this.network.pool, "submit_order", { market: market.id, sealed_b64: sealed }, 50, deposit);
     const orderId = tx.ok && tx.value != null ? String(tx.value) : null;
     return { orderId, tx, market: market.id, side: opts.side, drafts };
   }
@@ -208,10 +206,33 @@ export class Blindbook {
     return this.call(this.network.verifier, "execute_intents", { signed }, 100);
   }
 
-  /** Anyone may crank a batch; the unused OutLayer deposit is refunded. */
-  runBatch(depositYocto = 10_000_000_000_000_000_000_000n, gasT = 300): Promise<TxOutcome> {
-    return this.call(this.network.pool, "run_batch", {}, gasT, depositYocto);
+  /** Pool configuration, including the gas and deposit a crank needs. */
+  poolConfig(): Promise<PoolConfig> {
+    return this.view<PoolConfig>(this.network.pool, "get_config");
   }
+
+  /** Anyone may crank a batch; the unused OutLayer deposit is refunded. */
+  async runBatch(): Promise<TxOutcome> {
+    const cfg = await this.poolConfig();
+    const gasT = Math.ceil(Number(BigInt(cfg.run_gas) / TGAS)) + 15;
+    return this.call(this.network.pool, "run_batch", {}, gasT, BigInt(cfg.run_deposit));
+  }
+}
+
+export interface PoolConfig {
+  owner: string;
+  network: string;
+  project_id: string;
+  version_key: string;
+  result_key: string | null;
+  matcher_key: string | null;
+  venue_account: string;
+  verifier: string;
+  params: Record<string, number>;
+  run_deposit: string;
+  run_gas: string;
+  pending: number;
+  next_batch_id: number;
 }
 
 export type { LotDraft, Market, Network, Side };

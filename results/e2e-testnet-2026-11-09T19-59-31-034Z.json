@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-09T19:59:31.034Z",
+  "network": "testnet",
+  "pool": "pool.blindbook-dev.testnet",
+  "verifier": "intents-bbcced2c.testnet",
+  "reference_mid": 3.615807352351,
+  "lots": 2,
+  "lots_filled": 2,
+  "txs": {
+    "sell": "Es2BgaydFyd8W5x88tyH3nx7QfjHwmrxeZdi66fiDjdv",
+    "buy": "4PWu13TG73SsZfKidWqQ2UZVg63wfouNu8hh7HEhaNBE",
+    "run_batch": "8Qa2X8buwY86ztwXvrSk6rBNRNV2hReQzEHe82MPgMUa"
+  },
+  "batch": null,
+  "seller": {
+    "account": "house.blindbook-dev.testnet",
+    "base_delta": "-2000000000000000000000000",
+    "quote_delta": "7226348"
+  },
+  "buyer": {
+    "account": "demo.blindbook-dev.testnet",
+    "base_delta": "2000000000000000000000000",
+    "quote_delta": "-7233576"
+  },
+  "checks": {
+    "seller_got_at_least_limit": true,
+    "buyer_paid_at_most_limit": true,
+    "seller_effective_price": "3.613174",
+    "buyer_effective_price": "3.616788"
+  }
+}
