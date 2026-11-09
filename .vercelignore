@@ -1,0 +1,13 @@
+target/
+**/target/
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+**/.next-agent/
+**/.env
+**/.env.*
+!**/.env.example
+contracts/pool/e2e/node_modules/
+*.wasm
+!apps/web/public/**
