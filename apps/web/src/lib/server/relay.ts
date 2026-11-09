@@ -1,6 +1,6 @@
 import "server-only";
 import { Blindbook } from "@blindbook/client";
-import type { MultiPayload } from "@blindbook/sdk";
+import { MAINNET, type MultiPayload, referenceMid } from "@blindbook/sdk";
 import { network } from "./env";
 
 /**
@@ -48,14 +48,41 @@ export async function relayCancel(tickets: MultiPayload[]) {
   return { ok: tx.ok, tx: tx.hash, error: tx.error };
 }
 
+/**
+ * House liquidity: before a crank, the house rests a few lots on both sides a
+ * band away from the midpoint, valid for ten minutes. The matcher never lets
+ * it trade with itself and keeps only the side incoming flow needs, so unused
+ * house lots simply expire.
+ */
+const HOUSE_LOTS = 3;
+const HOUSE_BAND_BPS = 60n;
+async function refreshHouse() {
+  const id = process.env.HOUSE_ACCOUNT_ID;
+  const key = process.env.HOUSE_SECRET_KEY;
+  if (!id || !key) return;
+  const house = new Blindbook({ network, accountId: id, secretKey: key });
+  const market = network.markets[0];
+  const mid = await referenceMid(MAINNET.markets[0], 10n * 10n ** 24n, 36_000_000n);
+  const lotMid = (market.lot * mid.quote) / mid.base;
+  const quotes = [
+    { side: "buy" as const, limit: (lotMid * (10_000n + HOUSE_BAND_BPS)) / 10_000n },
+    { side: "sell" as const, limit: (lotMid * (10_000n - HOUSE_BAND_BPS)) / 10_000n },
+  ];
+  for (const q of quotes) {
+    await house.placeOrder({ market: market.id, side: q.side, limits: Array(HOUSE_LOTS).fill(q.limit), ttlMinutes: 10 }).catch(() => null);
+  }
+}
+
 let lastCrank = 0;
 export async function relayCrank() {
   const r = relay();
   if (!r) throw new Error("relay is not configured");
   if (Date.now() - lastCrank < 15_000) return { ok: false, error: "a batch was cranked moments ago" };
-  const cfg = await r.poolConfig();
-  if (cfg.pending === 0) return { ok: false, error: "nothing pending" };
+  const pending = (await r.poolConfig()).pending;
+  if (pending === 0) return { ok: false, error: "nothing pending" };
   lastCrank = Date.now();
+  await refreshHouse();
+  const cfg = await r.poolConfig();
   const batchId = cfg.next_batch_id;
   const tx = await r.runBatch();
   return { ok: tx.ok, tx: tx.hash, batchId, cranker: r.accountId, error: tx.error };
