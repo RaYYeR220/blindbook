@@ -2,6 +2,8 @@
 
 **Sell size without being seen.** Blindbook is a block-crossing venue, a dark pool, for NEAR Intents. You seal a block at your own limit. Each batch, a matcher running inside an Intel TDX enclave crosses it with the other side at a midpoint signed by 1Click, and both legs settle in one `execute_intents` call on the NEAR Intents verifier. Nobody sees a resting order: not other traders, not solvers, not us.
 
+**Live:** [blindbook-phi.vercel.app](https://blindbook-phi.vercel.app) · try a cross with no wallet at [/app](https://blindbook-phi.vercel.app/app) · re-check any batch with `pnpm verify:batch`.
+
 <!-- numbers:start -->
 On the public NEAR Intents route, selling **150,000 NEAR (~$532,000)** cost **101.8 bps (about $5,400)** against the midpoint, and from **200,000 NEAR** the solvers answered `No liquidity available`. Blindbook crosses the same block at the midpoint for a venue fee of at most 5 bps, taken only out of price improvement. *(1Click dry quotes, measured 2026-11-09, [`results/baseline-2026-11-09.json`](results/baseline-2026-11-09.json).)*
 <!-- numbers:end -->
@@ -34,7 +36,7 @@ trader ──seal──▶ pool (NEAR) ──run_batch──▶ OutLayer · Inte
 ## Try it
 
 <!-- try:start -->
-**Hosted demo.** Open the app and press **Sell 1 lot in the dark** or **Buy 1 lot in the dark**. A server-held demo account seals one lot, a house account rests the other side, and the batch cranks. About 15 seconds later you see the batch print, the settlement transaction, and both legs filled at the midpoint within their limits. No wallet, no funds, no install.
+**Hosted demo: [blindbook-phi.vercel.app/app](https://blindbook-phi.vercel.app/app).** Press **Sell 1 lot in the dark** or **Buy 1 lot in the dark**. A server-held demo account seals one lot, a house account rests the other side, and the batch cranks. About 15 seconds later you see the batch print, the settlement transaction, and both legs filled at the midpoint within their limits. No wallet, no funds, no install.
 
 **From a terminal, on testnet:**
 

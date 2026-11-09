@@ -4,7 +4,7 @@ Each step says what to do and what you should see.
 
 ## 1. See a block cross (1 minute, no wallet)
 
-Open the app and press **Sell 1 lot in the dark**.
+Open [blindbook-phi.vercel.app/app](https://blindbook-phi.vercel.app/app) and press **Sell 1 lot in the dark**.
 
 **You should see:** after about 15 seconds, a batch print with the midpoint, your lot filled at the midpoint minus at most 5 bps, a settlement transaction link, and the batch's verification checks turning green.
 
