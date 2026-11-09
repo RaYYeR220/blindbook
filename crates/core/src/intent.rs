@@ -242,10 +242,11 @@ pub fn recover_erc191(payload: &str, signature: &str) -> Result<String, IntentEr
         return Err(IntentError::Malformed("signature"));
     }
     let v = raw[64];
+    // The verifier accepts only a normalized recovery id; 27/28 would make the
+    // whole batch fail, so such lots are refused up front.
     let recid = match v {
         0 | 1 => v,
-        27 | 28 => v - 27,
-        _ => return Err(IntentError::Malformed("signature recovery id")),
+        _ => return Err(IntentError::Malformed("signature recovery id must be 0 or 1")),
     };
     let prefixed = format!("\x19Ethereum Signed Message:\n{}{}", payload.len(), payload);
     let digest = Keccak256::digest(prefixed.as_bytes());

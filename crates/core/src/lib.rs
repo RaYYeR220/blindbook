@@ -21,8 +21,9 @@ pub mod envelope;
 pub mod intent;
 pub mod price;
 pub mod quote;
+pub mod settle;
 
-pub use engine::{cross, Batch, Fill, Lot, Market, Order, Params, Rebate, Side, SkipReason};
+pub use engine::{cross, Batch, Fill, Lot, Market, MatchedLot, Order, Params, Rebate, Side, SkipReason};
 pub use price::{midpoint, Price, PriceError};
 pub use quote::{verify_quote, QuoteError, VerifiedQuote, ONE_CLICK_MANAGER_PUB_KEY};
 

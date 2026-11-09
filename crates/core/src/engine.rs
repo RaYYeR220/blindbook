@@ -111,6 +111,22 @@ pub struct Rebate {
     pub amount: Amount,
 }
 
+/// One lot that crossed, with everything settlement needs.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MatchedLot {
+    pub order_id: String,
+    pub owner: String,
+    pub side: Side,
+    pub index: u16,
+    #[serde(with = "crate::u128_str")]
+    pub limit_quote: Amount,
+    #[serde(with = "crate::u128_str")]
+    pub rebate: Amount,
+    #[serde(with = "crate::u128_str")]
+    pub fee: Amount,
+    pub intent: Value,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "reason", rename_all = "snake_case")]
 pub enum SkipReason {
@@ -142,6 +158,10 @@ pub struct Batch {
     pub rebates: Vec<Rebate>,
     /// Signed lot intents to submit, sells first then buys, in allocation order.
     pub intents: Vec<Value>,
+    /// Matched sell lots, in allocation order.
+    pub sells: Vec<MatchedLot>,
+    /// Matched buy lots, in allocation order. Same length as `sells`.
+    pub buys: Vec<MatchedLot>,
     pub skipped: Option<SkipReason>,
 }
 
@@ -158,6 +178,8 @@ impl Batch {
             fee: 0,
             rebates: vec![],
             intents: vec![],
+            sells: vec![],
+            buys: vec![],
             skipped: Some(skipped),
         }
     }
@@ -210,6 +232,8 @@ pub fn cross(
     let mut surplus: Amount = 0;
     let mut fee_total: Amount = 0;
     let mut rebate_by_owner: BTreeMap<String, Amount> = BTreeMap::new();
+    let mut matched_sells = Vec::with_capacity(k);
+    let mut matched_buys = Vec::with_capacity(k);
     let lot_fee_cap = bps_of(lot_mid, params.fee_bps)?;
 
     for (cands, alloc) in [(&sells, &sell_alloc), (&buys, &buy_alloc)] {
@@ -238,6 +262,20 @@ pub fn cross(
                 fill.fee += fee;
                 surplus += improvement;
                 intents.push(lot.intent.clone());
+                let matched = MatchedLot {
+                    order_id: c.order.id.clone(),
+                    owner: c.order.owner.clone(),
+                    side: c.order.side,
+                    index: lot.index,
+                    limit_quote: lot.limit_quote,
+                    rebate: improvement - fee,
+                    fee,
+                    intent: lot.intent.clone(),
+                };
+                match c.order.side {
+                    Side::Sell => matched_sells.push(matched),
+                    Side::Buy => matched_buys.push(matched),
+                }
             }
             fee_total += fill.fee;
             if fill.rebate > 0 {
@@ -263,6 +301,8 @@ pub fn cross(
         fee: fee_total,
         rebates,
         intents,
+        sells: matched_sells,
+        buys: matched_buys,
         skipped: None,
     })
 }
