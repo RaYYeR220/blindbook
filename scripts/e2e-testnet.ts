@@ -63,7 +63,7 @@ log(`run_batch by ${CRANKER} · ${crank.hash} · ${crank.ok ? "ok" : crank.error
 // 4. read the batch record and balances
 let batch: any = null;
 for (let i = 0; i < 20; i++) {
-  batch = await cranker.view(TESTNET.pool, "get_batch", { batch_id: batchId }).catch(() => null);
+  batch = await cranker.view(TESTNET.pool, "get_batch", { id: String(batchId) }).catch(() => null);
   if (batch && ["settled", "partially_settled", "failed", "rejected_signature", "no_cross"].includes(batch.status)) break;
   await new Promise((r) => setTimeout(r, 3_000));
 }
