@@ -36,7 +36,7 @@ trader ──seal──▶ pool (NEAR) ──run_batch──▶ OutLayer · Inte
 ## Try it
 
 <!-- try:start -->
-**Hosted demo: [blindbook-phi.vercel.app/app](https://blindbook-phi.vercel.app/app).** Press **Sell 1 lot in the dark** or **Buy 1 lot in the dark**. A server-held demo account seals one lot, a house account rests the other side, and the batch cranks. About 15 seconds later you see the batch print, the settlement transaction, and both legs filled at the midpoint within their limits. No wallet, no funds, no install.
+**Hosted demo: [blindbook-phi.vercel.app/app](https://blindbook-phi.vercel.app/app).** Press **Sell 1 lot in the dark** or **Buy 1 lot in the dark**. A server-held demo account seals one lot, a house account rests the other side, and the batch cranks. About 25 seconds later you see the batch print, the settlement transaction, and both legs filled at the midpoint within their limits. No wallet, no funds, no install.
 
 **From a terminal, on testnet:**
 
