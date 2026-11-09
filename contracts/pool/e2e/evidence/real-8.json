@@ -1,0 +1,245 @@
+{
+  "sell": {
+    "id": "4",
+    "tx": "EFSK1Xs64o9GF3E7sKiANc3pV7JKGnmwghRPNusvBMVR"
+  },
+  "buy": {
+    "id": "5",
+    "tx": "7jr5xxf9MggXdj8U2kmFovobbLPqQ5UCBeQALPEKR766"
+  },
+  "run": {
+    "id": 8,
+    "hash": "E2Fv1gXwxj8qZ3dFwBGvsweB8qt5UBXYPZ3Hg5qo4qru",
+    "gasT": 450,
+    "report": {
+      "hash": "E2Fv1gXwxj8qZ3dFwBGvsweB8qt5UBXYPZ3Hg5qo4qru",
+      "status": "SuccessValue",
+      "totalTgas": 21.23,
+      "receipts": [
+        {
+          "id": "9A2dMLr9yUwwqqyRMN7HrEM1pP3Ttzc7K4dJKkerv1T3",
+          "executor": "pool.blindbook-dev.testnet",
+          "method": "run_batch",
+          "gasBurnt": 4.333472993832,
+          "status": "SuccessReceiptId",
+          "logs": [
+            "EVENT_JSON:{\"standard\":\"blindbook\",\"version\":\"1.0.0\",\"event\":\"batch_requested\",\"data\":[{\"batch_id\":\"8\",\"op\":\"batch\",\"cranker\":\"blindbook-crank-e4c061.testnet\",\"orders\":[\"4\",\"5\"],\"input_bytes\":6397,\"deposit\":\"5000000000000000000000\"}]}"
+          ]
+        },
+        {
+          "id": "2NDEuNSuu4NhSmaBU7LpUpVtjhRQfp2UmR3ufCNJsThA",
+          "executor": "outlayer.testnet",
+          "method": "request_execution",
+          "gasBurnt": 7.41051268689,
+          "status": "SuccessReceiptId",
+          "logs": [
+            "Resolved project: blindbook-dev.testnet/blindbook-matcher, version: \"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\", source: WasmUrl { url: \"https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm\", hash: \"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\", build_target: Some(\"wasm32-wasip2\") }, uuid: p0000000000000130",
+            "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":14906,\\\"sender_id\\\":\\\"blindbook-crank-e4c061.testnet\\\",\\\"predecessor_id\\\":\\\"pool.blindbook-dev.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm\\\",\\\"hash\\\":\\\"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":20000000000,\\\"max_memory_mb\\\":256,\\\"max_execution_seconds\\\":30},\\\"input_data\\\":\\\"{\\\\\\\"v\\\\\\\":1,\\\\\\\"op\\\\\\\":\\\\\\\"batch\\\\\\\",\\\\\\\"network\\\\\\\":\\\\\\\"testnet\\\\\\\",\\\\\\\"verifier\\\\\\\":\\\\\\\"intents-bbcced2c.testnet\\\\\\\",\\\\\\\"venue_account\\\\\\\":\\\\\\\"venue.blindbook-dev.testnet\\\\\\\",\\\\\\\"now_ns\\\\\\\":\\\\\\\"1794240735563785091\\\\\\\",\\\\\\\"markets\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"tnear-tusdc\\\\\\\",\\\\\\\"base\\\\\\\":\\\\\\\"nep141:tnear-bbcced2c.testnet\\\\\\\",\\\\\\\"quote\\\\\\\":\\\\\\\"nep141:tusdc-bbcced2c.testnet\\\\\\\",\\\\\\\"lot\\\\\\\":\\\\\\\"1000000000000000000000000\\\\\\\",\\\\\\\"reference\\\\\\\":{\\\\\\\"base\\\\\\\":\\\\\\\"nep141:wrap.near\\\\\\\",\\\\\\\"quote\\\\\\\":\\\\\\\"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\\\\\\\",\\\\\\\"probe_base\\\\\\\":\\\\\\\"10000000000000000000000000\\\\\\\",\\\\\\\"probe_quote\\\\\\\":\\\\\\\"36000000\\\\\\\"}}],\\\\\\\"params\\\\\\\":{\\\\\\\"fee_bps\\\\\\\":5,\\\\\\\"max_spread_bps\\\\\\\":150,\\\\\\\"max_lots_per_side\\\\\\\":6,\\\\\\\"max_sub_batches\\\\\\\":4,\\\\\\\"deadline_margin_s\\\\\\\":150,\\\\\\\"quote_max_age_s\\\\\\\":120},\\\\\\\"orders\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"4\\\\\\\",\\\\\\\"seq\\\\\\\":4,\\\\\\\"market\\\\\\\":\\\\\\\"tnear-tusdc\\\\\\\",\\\\\\\"sealed\\\\\\\":\\\\\\\"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\\\\\\\"},{\\\\\\\"id\\\\\\\":\\\\\\\"5\\\\\\\",\\\\\\\"seq\\\\\\\":5,\\\\\\\"market\\\\\\\":\\\\\\\"tnear-tusdc\\\\\\\",\\\\\\\"sealed\\\\\\\":\\\\\\\"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\\\\\\\"}]}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":null,\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"5000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794240736149738471,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":\\\"p0000000000000130\\\",\\\"project_id\\\":\\\"blindbook-dev.testnet/blindbook-matcher\\\"}\",\"data_id\":[237,219,85,63,40,123,160,28,249,14,91,115,106,94,197,10,137,238,183,146,102,92,184,143,177,41,160,182,170,156,29,190],\"timestamp\":1794240736149738471}]}"
+          ]
+        },
+        {
+          "id": "C32vuZJMEZ19ETmQLdRxni3W821S7AW5kP6mJ3VkVfw",
+          "executor": "outlayer.testnet",
+          "method": "on_execution_response",
+          "gasBurnt": 3.354804508857,
+          "status": "SuccessValue",
+          "logs": [
+            "Retrieving large output from storage for request_id: 14906",
+            "[[yNEAR charged: \"1277003100000000000000\"]]",
+            "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"blindbook-crank-e4c061.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm\",\"hash\":\"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\",\"build_target\":\"wasm32-wasip2\"}},\"resources_used\":{\"instructions\":31735555,\"time_ms\":2770,\"compile_time_ms\":null},\"success\":true,\"error_message\":null,\"payment_charged\":\"1277003100000000000000\",\"payment_refunded\":\"3722996900000000000000\",\"compilation_note\":\"Cached WASM from 2026-11-09T16:07:12.814289+00:00\",\"timestamp\":1794240743884943624}]}",
+            "Execution completed successfully. Output: Json(874 bytes), Resources: { instructions: 31735555, time_ms: 2770 }, Cost: 1277003100000000000000 yoctoNEAR, Refund: 3722996900000000000000 yoctoNEAR, Cached WASM from 2026-11-09T16:07:12.814289+00:00"
+          ]
+        },
+        {
+          "id": "n8oZqPTCHgSps8pVPPaHZgEoQ2K18Aw5x2NP48PA8jc",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "FaL7EC5kNBXcNm79f25TYHn9aHzYaT5F8C1dGjyL9Ri",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "6sdsWFhNVs3WPX6zdTug7gKkE3wGkzaSoF7QuYXyMok4",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "J4A6vrrDGHFAKz5pP3C5rmQaKgSb99CsvprVKJAnbDo7",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "EJDx7b99o64USqcmhTc9NuqNdmBkF2PPzrrBJ3PnpBwa",
+          "executor": "pool.blindbook-dev.testnet",
+          "method": "on_result",
+          "gasBurnt": 3.592687448413,
+          "status": "SuccessValue",
+          "logs": [
+            "EVENT_JSON:{\"standard\":\"blindbook\",\"version\":\"1.0.0\",\"event\":\"batch_result\",\"data\":[{\"batch_id\":\"8\",\"op\":\"batch\",\"status\":\"completed\",\"error\":null,\"result_hash\":\"fc1a6a4221299c76d5d6b1590eade435fcdbc7ffeb2cfa2e1f0ca595a848b4cd\",\"ingested\":[\"4\",\"5\"],\"rejected\":[],\"deferred\":[],\"refunded\":\"46150000000000000000000\",\"markets\":[{\"market\":\"tnear-tusdc\",\"matched_lots\":0,\"base_volume\":\"0\",\"quote_volume\":\"0\",\"venue_fee\":\"0\",\"mid\":{\"quote\":\"36275616138990\",\"base\":\"10000000000000000000000000000000\"},\"skipped\":null}],\"book\":{\"orders\":2,\"lots\":2},\"sub_batches\":0,\"dispatched\":0}]}"
+          ]
+        },
+        {
+          "id": "9f3VzfFWFoT6WSqMLMg6q5U3h8eL113AKrdHyZoadRWc",
+          "executor": "house.blindbook-dev.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "w149a7FgPr1niFg1grgwD2v9SexsYBtoAiUGSqV99D1",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "EzXSuzLA4b6Nkq1TQ7mFz1mNepLCem1L4PZjX9BMH6Y4",
+          "executor": "demo.blindbook-dev.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "41m7wR1NbJfoCyB3NEZoHNvvWbTL2sFnCSCbQzWwDBGt",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "BACsCAqLjuArhajyZN1WW66tbLkkKhSc6VQSpMasJmwQ",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        },
+        {
+          "id": "EvuK6UnCGgUQY6QdAjC2AuWnWSf1oEsntW6WckTwxv4z",
+          "executor": "blindbook-crank-e4c061.testnet",
+          "method": "transfer",
+          "gasBurnt": 0.2231825625,
+          "status": "SuccessValue",
+          "logs": []
+        }
+      ]
+    },
+    "batch": {
+      "id": "8",
+      "op": "batch",
+      "cranker": "blindbook-crank-e4c061.testnet",
+      "orders": [
+        "4",
+        "5"
+      ],
+      "input_bytes": 6397,
+      "input_hash": "9f835590628be64a38d21c91cf550c3b86ee74bb26e29918c4f53df803e05610",
+      "deposit": "5000000000000000000000",
+      "requested_block": 276942974,
+      "requested_at": "1794240735563785091",
+      "finished_at": "1794240744469379151",
+      "status": "completed",
+      "error": null,
+      "result_hash": "fc1a6a4221299c76d5d6b1590eade435fcdbc7ffeb2cfa2e1f0ca595a848b4cd",
+      "ingested": [
+        "4",
+        "5"
+      ],
+      "rejected": [],
+      "deferred": [],
+      "refunded": "46150000000000000000000",
+      "markets": [
+        {
+          "market": "tnear-tusdc",
+          "mid": {
+            "quote": "36275616138990",
+            "base": "10000000000000000000000000000000"
+          },
+          "lot_mid_quote": "3627561",
+          "matched_lots": 0,
+          "base_volume": "0",
+          "quote_volume": "0",
+          "rebated": "0",
+          "venue_fee": "0",
+          "quotes": [
+            "DqE4UMuXikTKWpyubKmeFuW25vG5vZCmFLXFPhpcWenr",
+            "B5ixNk3rtpwnJGqXkX8Hno6dTCofmmpBgsJk7MiY1fvL"
+          ],
+          "sub_batches": 0,
+          "dropped": [
+            "simulate_failed"
+          ],
+          "skipped": null
+        }
+      ],
+      "book": {
+        "orders": 2,
+        "lots": 2
+      },
+      "sub_batches": 0,
+      "dispatched": 0,
+      "settled": [],
+      "keys": null
+    }
+  },
+  "before": {
+    "house.blindbook-dev.testnet": {
+      "tnear": "50000000000000000000000000",
+      "tusdc": "200000000"
+    },
+    "demo.blindbook-dev.testnet": {
+      "tnear": "5000000000000000000000000",
+      "tusdc": "20000000"
+    },
+    "venue.blindbook-dev.testnet": {
+      "tnear": "1000000000000000000000000",
+      "tusdc": "5000000"
+    }
+  },
+  "after": {
+    "house.blindbook-dev.testnet": {
+      "tnear": "50000000000000000000000000",
+      "tusdc": "200000000"
+    },
+    "demo.blindbook-dev.testnet": {
+      "tnear": "5000000000000000000000000",
+      "tusdc": "20000000"
+    },
+    "venue.blindbook-dev.testnet": {
+      "tnear": "1000000000000000000000000",
+      "tusdc": "5000000"
+    }
+  },
+  "deltas": {
+    "house.blindbook-dev.testnet": {
+      "tnear": "0",
+      "tusdc": "0"
+    },
+    "demo.blindbook-dev.testnet": {
+      "tnear": "0",
+      "tusdc": "0"
+    },
+    "venue.blindbook-dev.testnet": {
+      "tnear": "0",
+      "tusdc": "0"
+    }
+  }
+}

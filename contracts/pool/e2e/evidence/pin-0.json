@@ -1,0 +1,25 @@
+{
+  "hash": "DUpJ13z6Mjujm7jE1AuwfrBCaZG3Thc868T3n9hzStMF",
+  "status": "SuccessValue",
+  "totalTgas": 2.17,
+  "receipts": [
+    {
+      "id": "7z9CovBqa4Z8thbqKKRpkNKLvFjFzFs1VgXyuhiCCvEZ",
+      "executor": "pool.blindbook-dev.testnet",
+      "method": "set_result_key",
+      "gasBurnt": 1.635903151578,
+      "status": "SuccessValue",
+      "logs": [
+        "EVENT_JSON:{\"standard\":\"blindbook\",\"version\":\"1.0.0\",\"event\":\"config_changed\",\"data\":[{\"field\":\"result_key\",\"by\":\"blindbook-dev.testnet\",\"value\":\"ed25519:A9gNBTufpo89p1smJkpBwAGok7Lk3hKTDnWssLQBcCqX\"}]}"
+      ]
+    },
+    {
+      "id": "AXyGXDu25LuT3FvY8QhYZwpgqwJWsAvJ3zmyDSsBdcZe",
+      "executor": "blindbook-dev.testnet",
+      "method": "transfer",
+      "gasBurnt": 0.2231825625,
+      "status": "SuccessValue",
+      "logs": []
+    }
+  ]
+}

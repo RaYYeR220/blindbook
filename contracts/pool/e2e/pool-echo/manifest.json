@@ -1,0 +1,5 @@
+{
+  "signing_keys": [{"path": "result", "type": "ed25519", "caller": "predecessor"}],
+  "encryption_keys": [{"path": "book", "caller": "predecessor"}],
+  "callers": {"contract": {"only": ["pool.blindbook-dev.testnet"]}}
+}

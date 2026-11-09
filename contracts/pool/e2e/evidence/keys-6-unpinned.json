@@ -1,0 +1,132 @@
+{
+  "id": 6,
+  "hash": "HFeE25FaWsnZtWCyED6BWcFp1i7579gQ1wm2F18Gu8Fy",
+  "gasT": 450,
+  "report": {
+    "hash": "HFeE25FaWsnZtWCyED6BWcFp1i7579gQ1wm2F18Gu8Fy",
+    "status": "SuccessValue",
+    "totalTgas": 14.11,
+    "receipts": [
+      {
+        "id": "9qCia1BD5q51gWCMXFz9Yy5X1JkHrSJSZsCrZprfDYFP",
+        "executor": "pool.blindbook-dev.testnet",
+        "method": "run_keys",
+        "gasBurnt": 2.799606154019,
+        "status": "SuccessReceiptId",
+        "logs": [
+          "EVENT_JSON:{\"standard\":\"blindbook\",\"version\":\"1.0.0\",\"event\":\"batch_requested\",\"data\":[{\"batch_id\":\"6\",\"op\":\"keys\",\"cranker\":\"blindbook-crank-e4c061.testnet\",\"orders\":[],\"input_bytes\":633,\"deposit\":\"5000000000000000000000\"}]}"
+        ]
+      },
+      {
+        "id": "Cct7XmsMk2oNAFBwX6a1ezmGyyR1gGJTP441Nfs5jstD",
+        "executor": "outlayer.testnet",
+        "method": "request_execution",
+        "gasBurnt": 4.546818569587,
+        "status": "SuccessReceiptId",
+        "logs": [
+          "Resolved project: blindbook-dev.testnet/blindbook-matcher, version: \"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\", source: WasmUrl { url: \"https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm\", hash: \"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\", build_target: Some(\"wasm32-wasip2\") }, uuid: p0000000000000130",
+          "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":14903,\\\"sender_id\\\":\\\"blindbook-crank-e4c061.testnet\\\",\\\"predecessor_id\\\":\\\"pool.blindbook-dev.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm\\\",\\\"hash\\\":\\\"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":20000000000,\\\"max_memory_mb\\\":256,\\\"max_execution_seconds\\\":30},\\\"input_data\\\":\\\"{\\\\\\\"v\\\\\\\":1,\\\\\\\"op\\\\\\\":\\\\\\\"keys\\\\\\\",\\\\\\\"network\\\\\\\":\\\\\\\"testnet\\\\\\\",\\\\\\\"verifier\\\\\\\":\\\\\\\"intents-bbcced2c.testnet\\\\\\\",\\\\\\\"venue_account\\\\\\\":\\\\\\\"venue.blindbook-dev.testnet\\\\\\\",\\\\\\\"now_ns\\\\\\\":\\\\\\\"1794240427535267491\\\\\\\",\\\\\\\"markets\\\\\\\":[{\\\\\\\"id\\\\\\\":\\\\\\\"tnear-tusdc\\\\\\\",\\\\\\\"base\\\\\\\":\\\\\\\"nep141:tnear-bbcced2c.testnet\\\\\\\",\\\\\\\"quote\\\\\\\":\\\\\\\"nep141:tusdc-bbcced2c.testnet\\\\\\\",\\\\\\\"lot\\\\\\\":\\\\\\\"1000000000000000000000000\\\\\\\",\\\\\\\"reference\\\\\\\":{\\\\\\\"base\\\\\\\":\\\\\\\"nep141:wrap.near\\\\\\\",\\\\\\\"quote\\\\\\\":\\\\\\\"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\\\\\\\",\\\\\\\"probe_base\\\\\\\":\\\\\\\"10000000000000000000000000\\\\\\\",\\\\\\\"probe_quote\\\\\\\":\\\\\\\"36000000\\\\\\\"}}],\\\\\\\"params\\\\\\\":{\\\\\\\"fee_bps\\\\\\\":5,\\\\\\\"max_spread_bps\\\\\\\":150,\\\\\\\"max_lots_per_side\\\\\\\":6,\\\\\\\"max_sub_batches\\\\\\\":4,\\\\\\\"deadline_margin_s\\\\\\\":150,\\\\\\\"quote_max_age_s\\\\\\\":120},\\\\\\\"orders\\\\\\\":[]}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":null,\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"5000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794240428144317696,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":\\\"p0000000000000130\\\",\\\"project_id\\\":\\\"blindbook-dev.testnet/blindbook-matcher\\\"}\",\"data_id\":[247,172,76,249,202,220,107,136,79,168,57,187,232,74,89,157,10,47,211,195,251,222,242,106,23,214,114,164,245,193,159,205],\"timestamp\":1794240428144317696}]}"
+        ]
+      },
+      {
+        "id": "7YwygHbNNda5QipGSY8orhPkzwqFYoBZBzaCiZyb9foi",
+        "executor": "outlayer.testnet",
+        "method": "on_execution_response",
+        "gasBurnt": 3.083842696038,
+        "status": "SuccessValue",
+        "logs": [
+          "[[yNEAR charged: \"1250200100000000000000\"]]",
+          "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"blindbook-crank-e4c061.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm\",\"hash\":\"a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980\",\"build_target\":\"wasm32-wasip2\"}},\"resources_used\":{\"instructions\":1655811,\"time_ms\":1235,\"compile_time_ms\":1267},\"success\":true,\"error_message\":null,\"payment_charged\":\"1250200100000000000000\",\"payment_refunded\":\"3749799900000000000000\",\"compilation_note\":\"Freshly compiled\",\"timestamp\":1794240444768023330}]}",
+          "Execution completed successfully. Output: Json(431 bytes), Resources: { instructions: 1655811, time_ms: 1235 }, Cost: 1250200100000000000000 yoctoNEAR, Refund: 3749799900000000000000 yoctoNEAR, Freshly compiled"
+        ]
+      },
+      {
+        "id": "FTkEkv1yRpz6dR4dDn2Rrw8Tes3TmXQcMXm9kjzgjngk",
+        "executor": "blindbook-crank-e4c061.testnet",
+        "method": "transfer",
+        "gasBurnt": 0.2231825625,
+        "status": "SuccessValue",
+        "logs": []
+      },
+      {
+        "id": "4sLp9Q1XdG1unmZHh24zU2FQWbGABQDPFPfZB4ioUCzZ",
+        "executor": "blindbook-crank-e4c061.testnet",
+        "method": "transfer",
+        "gasBurnt": 0.2231825625,
+        "status": "SuccessValue",
+        "logs": []
+      },
+      {
+        "id": "EG7uZcGK4zEvJGnScpqsjHd7K1CYHJUf51SuwKfk7UzP",
+        "executor": "blindbook-crank-e4c061.testnet",
+        "method": "transfer",
+        "gasBurnt": 0.2231825625,
+        "status": "SuccessValue",
+        "logs": []
+      },
+      {
+        "id": "Bqodb3tRqqKAMjc4Ux8eN9Y2BmPUiHNbiXtnHLcvqQaM",
+        "executor": "blindbook-crank-e4c061.testnet",
+        "method": "transfer",
+        "gasBurnt": 0.2231825625,
+        "status": "SuccessValue",
+        "logs": []
+      },
+      {
+        "id": "FthrwEfJDjNG5QhsGNHcoXYrQFG6eBbbPMK3KT1ppPKC",
+        "executor": "pool.blindbook-dev.testnet",
+        "method": "on_result",
+        "gasBurnt": 2.036068909566,
+        "status": "SuccessValue",
+        "logs": [
+          "EVENT_JSON:{\"standard\":\"blindbook\",\"version\":\"1.0.0\",\"event\":\"batch_result\",\"data\":[{\"batch_id\":\"6\",\"op\":\"keys\",\"status\":\"unpinned\",\"error\":\"no result key pinned; keys recorded unverified\",\"result_hash\":\"51576705929d5b1c92e8c40763fb6caf69b5db2207188d496b05b27e2bce38e1\",\"ingested\":[],\"rejected\":[],\"deferred\":[],\"refunded\":\"0\",\"markets\":[],\"book\":null,\"sub_batches\":0,\"dispatched\":0}]}"
+        ]
+      },
+      {
+        "id": "7tFJaGAfiTuGeeyyCxSe1V5LbhV19xN4utbJH13ovba6",
+        "executor": "blindbook-crank-e4c061.testnet",
+        "method": "transfer",
+        "gasBurnt": 0.2231825625,
+        "status": "SuccessValue",
+        "logs": []
+      },
+      {
+        "id": "DKambRkcMKD15MCWrmjoP93PxGx6YJLeGKyBMiEhcXmk",
+        "executor": "blindbook-crank-e4c061.testnet",
+        "method": "transfer",
+        "gasBurnt": 0.2231825625,
+        "status": "SuccessValue",
+        "logs": []
+      }
+    ]
+  },
+  "batch": {
+    "id": "6",
+    "op": "keys",
+    "cranker": "blindbook-crank-e4c061.testnet",
+    "orders": [],
+    "input_bytes": 633,
+    "input_hash": "f5684a7de46871c66da71d57091ab58ba92fc6e3e40f2f9d8d97889e6e5da537",
+    "deposit": "5000000000000000000000",
+    "requested_block": 276942461,
+    "requested_at": "1794240427535267491",
+    "finished_at": "1794240445362409622",
+    "status": "unpinned",
+    "error": "no result key pinned; keys recorded unverified",
+    "result_hash": "51576705929d5b1c92e8c40763fb6caf69b5db2207188d496b05b27e2bce38e1",
+    "ingested": [],
+    "rejected": [],
+    "deferred": [],
+    "refunded": "0",
+    "markets": [],
+    "book": null,
+    "sub_batches": 0,
+    "dispatched": 0,
+    "settled": [],
+    "keys": {
+      "matcher_x25519": "79149df7842519d2cf6b976ef2fff4c2af8f81b7f5fdd56650041d933945b273",
+      "venue": "ed25519:9NiVPnMqhCj1WCWMzTq2cAk1D1GFiWrXqwTyVsVD8jED",
+      "result_key": "ed25519:4NujvZbEiDqEVPRK6zB5kmPpDYqjxKQW2A5RZrjxyE6h"
+    }
+  }
+}

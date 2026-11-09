@@ -1,0 +1,33 @@
+{
+  "owner": "blindbook-dev.testnet",
+  "network": "testnet",
+  "outlayer": "outlayer.testnet",
+  "project_id": "blindbook-dev.testnet/pool-echo",
+  "version_key": "7273e9562e3023da27d570808d43a76254e4a04ac49e3081d637c230ddf661a2",
+  "result_key": null,
+  "venue_account": "venue-bbcced2c.testnet",
+  "venue_key": null,
+  "verifier": "intents-bbcced2c.testnet",
+  "markets": [
+    {
+      "id": "tnear-tusdc",
+      "base": "nep141:tnear-bbcced2c.testnet",
+      "quote": "nep141:tusdc-bbcced2c.testnet",
+      "lot": "1000000000000000000000000",
+      "reference": {
+        "base": "nep141:wrap.near",
+        "quote": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+        "probe_base": "10000000000000000000000000",
+        "probe_quote": "36000000"
+      }
+    }
+  ],
+  "params": {
+    "fee_bps": 5,
+    "max_spread_bps": 150,
+    "max_lots_per_side": 6,
+    "max_sub_batches": 4,
+    "deadline_margin_s": 150,
+    "quote_max_age_s": 120
+  }
+}
