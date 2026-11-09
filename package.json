@@ -8,7 +8,8 @@
     "build": "pnpm -r build",
     "baseline": "tsx scripts/baseline.ts",
     "e2e:testnet": "tsx scripts/e2e-testnet.ts",
-    "verify:batch": "tsx scripts/verify-batch.ts"
+    "verify:batch": "tsx scripts/verify-batch.ts",
+    "readme": "tsx scripts/render-readme.ts"
   },
   "devDependencies": {
     "tsx": "^4.20.0"
