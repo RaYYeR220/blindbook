@@ -48,9 +48,16 @@ fn floor_div(a: i128, b: i128) -> i128 {
     }
 }
 
-/// Protocol fee the verifier credits for one delta.
-pub fn protocol_fee(delta: i128, fee_pips: u32) -> i128 {
-    if delta >= 0 {
+/// Whether the verifier charges its fee on a negative delta of `abs` units of
+/// `token`: always for NEP-141, for multi-tokens only above one unit, never
+/// for NFTs.
+fn fee_applies(token: &str, abs: i128) -> bool {
+    token.starts_with("nep141:") || ((token.starts_with("nep245:") || token.starts_with("imt:")) && abs > 1)
+}
+
+/// Protocol fee the verifier credits for one delta of `token`.
+pub fn protocol_fee(token: &str, delta: i128, fee_pips: u32) -> i128 {
+    if delta >= 0 || !fee_applies(token, -delta) {
         0
     } else {
         ceil_div(-delta * fee_pips as i128, FEE_DENOMINATOR)
@@ -60,11 +67,13 @@ pub fn protocol_fee(delta: i128, fee_pips: u32) -> i128 {
 /// The venue delta, per token, that makes `diffs` plus the venue's own delta
 /// net to zero including protocol fees. Zero entries are omitted.
 pub fn closure(diffs: &[Diff], fee_pips: u32) -> Diff {
-    let keep = FEE_DENOMINATOR - fee_pips as i128;
+    let keep_for = |token: &str, abs: i128| {
+        FEE_DENOMINATOR - if fee_applies(token, abs) { fee_pips as i128 } else { 0 }
+    };
     let mut supply: BTreeMap<String, i128> = BTreeMap::new();
     for d in diffs {
         for (token, &delta) in d {
-            let s = if delta < 0 { ceil_div(delta * keep, FEE_DENOMINATOR) } else { delta };
+            let s = if delta < 0 { ceil_div(delta * keep_for(token, -delta), FEE_DENOMINATOR) } else { delta };
             *supply.entry(token.clone()).or_default() += s;
         }
     }
@@ -72,7 +81,7 @@ pub fn closure(diffs: &[Diff], fee_pips: u32) -> Diff {
         .into_iter()
         .filter_map(|(token, s)| {
             let c = -s;
-            let c = if c < 0 { floor_div(c * FEE_DENOMINATOR, keep) } else { c };
+            let c = if c < 0 { floor_div(c * FEE_DENOMINATOR, keep_for(&token, s.abs())) } else { c };
             (c != 0).then_some((token, c))
         })
         .collect()
@@ -83,7 +92,7 @@ pub fn residual(diffs: &[Diff], fee_pips: u32) -> Diff {
     let mut out: Diff = BTreeMap::new();
     for d in diffs {
         for (token, &delta) in d {
-            *out.entry(token.clone()).or_default() += delta + protocol_fee(delta, fee_pips);
+            *out.entry(token.clone()).or_default() += delta + protocol_fee(token, delta, fee_pips);
         }
     }
     out.retain(|_, v| *v != 0);
@@ -183,6 +192,17 @@ mod tests {
     use crate::price::Price;
 
     const E24: i128 = 1_000_000_000_000_000_000_000_000;
+    const N: &str = "nep141:tnear.testnet";
+    const U: &str = "nep141:tusdc.testnet";
+
+    #[test]
+    fn fee_skips_nfts_and_single_multitoken_units() {
+        assert_eq!(protocol_fee("nep141:a", -1_000_000, 1), 1);
+        assert_eq!(protocol_fee("nep171:nft:1", -1_000_000, 1), 0);
+        assert_eq!(protocol_fee("nep245:mt:1", -1, 1), 0);
+        assert_eq!(protocol_fee("nep245:mt:1", -2, 1), 1);
+        assert_eq!(protocol_fee("nep141:a", 5, 1), 0);
+    }
 
     fn diff(pairs: &[(&str, i128)]) -> Diff {
         pairs.iter().map(|(k, v)| (k.to_string(), *v)).collect()
@@ -191,20 +211,20 @@ mod tests {
     #[test]
     fn closure_matches_the_verifier_on_testnet() {
         // Settled on testnet with fee = 1 pip (tx 8f4ubY6LPvmNXDuBbNoBgr6sQcTmji2jn12av4qCVqAZ).
-        let seller = diff(&[("n", -100 * E24), ("u", 250_000_000)]);
-        let buyer = diff(&[("n", 100 * E24), ("u", -260_000_000)]);
+        let seller = diff(&[(N, -100 * E24), (U, 250_000_000)]);
+        let buyer = diff(&[(N, 100 * E24), (U, -260_000_000)]);
         let venue = closure(&[seller.clone(), buyer.clone()], 1);
-        assert_eq!(venue["n"], -100_000_100_000_100_000_101);
-        assert_eq!(venue["u"], 9_999_740);
+        assert_eq!(venue[N], -100_000_100_000_100_000_101);
+        assert_eq!(venue[U], 9_999_740);
         assert!(residual(&[seller, buyer, venue], 1).is_empty());
     }
 
     #[test]
     fn closure_without_fee_is_the_negated_sum() {
-        let a = diff(&[("n", -10), ("u", 25)]);
-        let b = diff(&[("n", 10), ("u", -26)]);
+        let a = diff(&[(N, -10), (U, 25)]);
+        let b = diff(&[(N, 10), (U, -26)]);
         let venue = closure(&[a, b], 0);
-        assert_eq!(venue, diff(&[("u", 1)]));
+        assert_eq!(venue, diff(&[(U, 1)]));
     }
 
     #[test]
@@ -224,9 +244,9 @@ mod tests {
                     let lot = (next() % 1_000 + 1) as i128 * E24 / 10;
                     let q = (next() % 10_000_000 + 1) as i128;
                     if next() % 2 == 0 {
-                        diffs.push(diff(&[("n", -lot), ("u", q)]));
+                        diffs.push(diff(&[(N, -lot), (U, q)]));
                     } else {
-                        diffs.push(diff(&[("n", lot), ("u", -q)]));
+                        diffs.push(diff(&[(N, lot), (U, -q)]));
                     }
                 }
                 let venue = closure(&diffs, fee);
