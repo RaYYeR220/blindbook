@@ -112,7 +112,7 @@ The full message formats are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
 
 | Suite | Count |
 | --- | --- |
-| `crates/core`: engine, price, quotes, envelope, lot checks, settlement planning | 60 + a fuzz test over 5,000 random books (0 invariant violations) |
+| `crates/core`: engine, price, quotes, envelope, lot checks, settlement planning | 60, including a fuzz test over 5,000 random books (0 invariant violations) |
 | `matcher`: full batches against a mock verifier that enforces signatures, nonces, salts, balances and the fee invariant | 94 |
 | `contracts/pool` | 46 (95.6% line coverage) |
 | `packages/sdk`: including byte-for-byte envelope compatibility with Rust and SDK-signed lots passing the Rust validator | 11 |
