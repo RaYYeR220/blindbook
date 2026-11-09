@@ -1,0 +1,348 @@
+@import "tailwindcss";
+
+/*
+  Blindbook design tokens
+  -----------------------
+  One ultramarine ground, white ink at three strengths, one lime accent kept
+  for events (a cross, a fill, a check), and hairlines instead of shadows.
+  Everything is defined once in @theme, so each token is both a CSS variable
+  and a Tailwind utility:
+
+    colour   --color-ground      #2430d0   page ground           bg-ground
+             --color-ground-deep #1e28b6   bands, scene wells    bg-ground-deep
+             --color-sink        #1a229f   code cards, inputs    bg-sink
+             --color-tile        #3843dc   a sealed lot          bg-tile
+             --color-lime        #d4f24a   events only           text-lime
+             --color-ink         #ffffff   primary text          text-ink
+             --color-ink-2       78% white body text             text-ink-2
+             --color-ink-3       66% white captions, labels      text-ink-3
+             --color-hair        12% white rules, borders        border-hair
+             --color-hair-2      20% white stronger rules        border-hair-2
+             --color-panel       70% ground, frosted panels      bg-panel
+             --color-tip         tooltip fill                    bg-tip
+    radius   --radius-tile 3, xs 6, sm 10, md 16, lg 28, hero 40, pill 999
+    space    Tailwind's 4px scale, plus --spacing-gutter 32 / gutter-sm 16
+             and --spacing-section 136 / section-sm 96 for page rhythm
+    width    --container-wrap 1320                               max-w-wrap
+    type     --font-sans General Sans (Fontshare CDN), --font-mono Geist Mono
+             --text-hero, --text-h2, --text-lead for the display sizes
+    motion   --ease-reveal cubic-bezier(.16, 1, .3, 1)          ease-reveal
+
+  Primitives in @layer components (utilities can still override them):
+    bb-btn (white pill, lime on hover), bb-link (underlined text action),
+    bb-seg (segmented radio group), bb-wrap (content width + gutters),
+    bb-header / bb-header--flow, bb-nav, bb-brand, bb-links, bb-nav-cta,
+    bb-footer, bb-reveal (first-paint entrance), code-chip, skip-link.
+
+  Canvas scenes read the same values from src/components/tiles/palette.ts.
+  Landing-only rules live in src/styles/landing.css, scoped under .landing.
+*/
+
+@theme static {
+  --color-ground: #2430d0;
+  --color-ground-deep: #1e28b6;
+  --color-sink: #1a229f;
+  --color-tile: #3843dc;
+  --color-lime: #d4f24a;
+  --color-ink: #ffffff;
+  --color-ink-2: rgb(255 255 255 / 0.78);
+  --color-ink-3: rgb(255 255 255 / 0.66);
+  --color-hair: rgb(255 255 255 / 0.12);
+  --color-hair-2: rgb(255 255 255 / 0.2);
+  --color-panel: rgb(36 48 208 / 0.7);
+  --color-tip: rgb(22 30 150 / 0.92);
+
+  --radius-tile: 3px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-hero: 40px;
+  --radius-pill: 999px;
+
+  --spacing-gutter: 32px;
+  --spacing-gutter-sm: 16px;
+  --spacing-section: 136px;
+  --spacing-section-sm: 96px;
+  --container-wrap: 1320px;
+
+  --font-sans: "General Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-hero: clamp(46px, 7.64vw, 110px);
+  --text-hero--line-height: 0.94;
+  --text-hero--letter-spacing: -0.05em;
+  --text-h2: clamp(40px, 4.6vw, 66px);
+  --text-h2--line-height: 0.98;
+  --text-h2--letter-spacing: -0.045em;
+  --text-lead: 18px;
+  --text-lead--line-height: 1.55;
+
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-ground);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  /*
+    Site primitives, shared by every page: header and footer chrome, the
+    content width, buttons, text links, the segmented control, and the
+    entrance used on first paint (.js and .is-in are set on <html>).
+  */
+  .bb-header {
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
+  .bb-header.bb-header--flow {
+    position: relative;
+    border-bottom: 1px solid var(--color-hair);
+  }
+  .bb-nav {
+    max-width: var(--container-wrap);
+    margin: 0 auto;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .bb-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .bb-brand svg {
+    display: block;
+  }
+  .bb-links {
+    display: flex;
+    gap: 30px;
+  }
+  .bb-links a {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--color-ink-2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .bb-links a:hover,
+  .bb-links a[aria-current="page"] {
+    color: var(--color-ink);
+  }
+  .bb-nav-cta {
+    font-size: 14.5px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(255 255 255 / 0.28);
+    background: rgb(36 48 208 / 0.55);
+    transition:
+    border-color 0.2s,
+    background 0.2s;
+  }
+  .bb-nav-cta:hover {
+    border-color: rgb(255 255 255 / 0.6);
+  }
+  .bb-btn {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-ink);
+    color: var(--color-ground);
+    border-radius: var(--radius-pill);
+    padding: 14px 26px;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .bb-btn:hover {
+    background: var(--color-lime);
+  }
+  .bb-link {
+    font: inherit;
+    font-weight: 500;
+    font-size: 16px;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.38);
+    padding: 0 0 2px;
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .bb-link:hover {
+    border-color: var(--color-lime);
+  }
+  .js .bb-reveal {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .is-in .bb-reveal {
+    opacity: 1;
+    transform: none;
+    transition:
+    opacity 0.8s var(--ease-reveal),
+    transform 0.8s var(--ease-reveal);
+  }
+  @media (max-width: 860px) {
+    .bb-links {
+      display: none;
+    }
+    .bb-nav {
+      padding: 18px 16px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .bb-reveal {
+      opacity: 1;
+      transform: none;
+    }
+    .is-in .bb-reveal {
+      transition: none;
+    }
+  }
+  .bb-wrap {
+    max-width: var(--container-wrap);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .bb-seg {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--color-hair-2);
+    border-radius: var(--radius-pill);
+  }
+  .bb-seg button {
+    font: 500 14px/1 var(--font-sans);
+    color: var(--color-ink-2);
+    background: none;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+    background 0.2s,
+    color 0.2s;
+  }
+  .bb-seg button:hover {
+    color: var(--color-ink);
+  }
+  .bb-seg button[aria-checked="true"] {
+    background: var(--color-ink);
+    color: var(--color-ground);
+  }
+  .bb-seg button:focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 2px;
+    border-radius: var(--radius-pill);
+  }
+  .bb-footer {
+    line-height: normal;
+    background: var(--color-ground-deep);
+    border-top: 1px solid var(--color-hair);
+  }
+  .bb-footer-in {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px 48px;
+    flex-wrap: wrap;
+    padding-top: 40px;
+    padding-bottom: 48px;
+  }
+  .bb-footer-brand p {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--color-ink-3);
+  }
+  .bb-footer-links {
+    display: flex;
+    gap: 28px;
+  }
+  .bb-footer-links a {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--color-ink-2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .bb-footer-links a:hover {
+    color: var(--color-ink);
+  }
+  @media (max-width: 860px) {
+    .bb-wrap {
+      padding: 0 16px;
+    }
+    .bb-footer-in {
+      flex-direction: column;
+    }
+  }
+
+  /* inline code on the ground */
+  .code-chip {
+    font-family: var(--font-mono);
+    font-size: 0.84em;
+    color: var(--color-ink);
+    background: rgb(255 255 255 / 0.08);
+    padding: 1px 5px;
+    border-radius: 5px;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -100px;
+    z-index: 50;
+    padding: 10px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--color-ink);
+    color: var(--color-ground);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .skip-link:focus-visible {
+    top: 16px;
+  }
+}
