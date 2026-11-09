@@ -329,31 +329,37 @@ fn candidates<'a>(book: &'a [Order], side: Side, lot_mid: Amount, horizon: u64) 
     out
 }
 
-/// A trader with live interest on both sides keeps only the side they
-/// entered first; the other side sits out this batch.
+/// A trader with live interest on both sides never trades with themselves:
+/// they keep only one side for this batch. The kept side is the one the rest
+/// of the book needs (the side facing the larger external imbalance), so a
+/// two-sided liquidity provider meets incoming flow in either direction. On a
+/// tie, the side they entered first is kept.
 fn block_self_trades(sells: &mut Vec<Candidate>, buys: &mut Vec<Candidate>) {
     let first_seq = |cands: &Vec<Candidate>, owner: &str| {
-        cands
-            .iter()
-            .filter(|c| c.order.owner == owner)
-            .map(|c| c.order.seq)
-            .min()
+        cands.iter().filter(|c| c.order.owner == owner).map(|c| c.order.seq).min()
     };
     let sell_owners: BTreeSet<String> = sells.iter().map(|c| c.order.owner.clone()).collect();
-    let both: Vec<String> = buys
-        .iter()
-        .map(|c| c.order.owner.clone())
-        .filter(|o| sell_owners.contains(o))
-        .collect::<BTreeSet<_>>()
-        .into_iter()
-        .collect();
-    for owner in both {
-        let s = first_seq(sells, &owner).unwrap_or(u64::MAX);
-        let b = first_seq(buys, &owner).unwrap_or(u64::MAX);
-        if s <= b {
-            buys.retain(|c| c.order.owner != owner);
+    let both: BTreeSet<String> =
+        buys.iter().map(|c| c.order.owner.clone()).filter(|o| sell_owners.contains(o)).collect();
+    if both.is_empty() {
+        return;
+    }
+    let external = |cands: &Vec<Candidate>| -> usize {
+        cands.iter().filter(|c| !both.contains(&c.order.owner)).map(|c| c.lots.len()).sum()
+    };
+    let (ext_sell, ext_buy) = (external(sells), external(buys));
+    for owner in &both {
+        let keep_sells = if ext_buy > ext_sell {
+            true
+        } else if ext_sell > ext_buy {
+            false
         } else {
-            sells.retain(|c| c.order.owner != owner);
+            first_seq(sells, owner).unwrap_or(u64::MAX) <= first_seq(buys, owner).unwrap_or(u64::MAX)
+        };
+        if keep_sells {
+            buys.retain(|c| &c.order.owner != owner);
+        } else {
+            sells.retain(|c| &c.order.owner != owner);
         }
     }
 }
@@ -587,6 +593,42 @@ mod tests {
         assert_eq!(b.matched_lots, 1);
         assert!(b.fills.iter().all(|f| f.order_id != "b_self"));
         assert!(b.fills.iter().any(|f| f.order_id == "b_other"));
+    }
+
+    #[test]
+    fn two_sided_maker_fills_the_side_the_flow_needs() {
+        // the maker rests on both sides; a user sells after it
+        let book = vec![
+            order("mm_ask", "maker.near", Side::Sell, &[35_500, 35_500], 1),
+            order("mm_bid", "maker.near", Side::Buy, &[36_500, 36_500], 2),
+            order("user_sell", "alice.near", Side::Sell, &[35_900], 3),
+        ];
+        let b = run(&book);
+        assert_eq!(b.matched_lots, 1);
+        let ids: Vec<&str> = b.fills.iter().map(|f| f.order_id.as_str()).collect();
+        assert_eq!(ids, vec!["user_sell", "mm_bid"]);
+    }
+
+    #[test]
+    fn two_sided_maker_meets_incoming_buys_too() {
+        let book = vec![
+            order("mm_ask", "maker.near", Side::Sell, &[35_500, 35_500], 1),
+            order("mm_bid", "maker.near", Side::Buy, &[36_500, 36_500], 2),
+            order("user_buy", "bob.near", Side::Buy, &[36_100, 36_100], 3),
+        ];
+        let b = run(&book);
+        assert_eq!(b.matched_lots, 2);
+        let ids: Vec<&str> = b.fills.iter().map(|f| f.order_id.as_str()).collect();
+        assert_eq!(ids, vec!["mm_ask", "user_buy"]);
+    }
+
+    #[test]
+    fn a_maker_alone_never_trades_with_itself() {
+        let book = vec![
+            order("mm_ask", "maker.near", Side::Sell, &[35_500], 1),
+            order("mm_bid", "maker.near", Side::Buy, &[36_500], 2),
+        ];
+        assert_eq!(run(&book).matched_lots, 0);
     }
 
     #[test]
