@@ -153,6 +153,43 @@ Everything in `input_data` and in the result is public on chain:
 - The result reveals only what settlement reveals anyway: crossed lots, volumes and the reference price.
 - Resting orders, their sizes and their limits never leave the enclave.
 
+### 3.4 Matcher v1 details
+
+Implemented by `matcher/` (`blindbook-matcher`). These fields extend §3.1 and §3.2.
+
+**Input additions**
+- `venue_account` (required for `batch`): the verifier account the venue signs as. The `venue` key from `op: "keys"` must be registered on it with `add_public_key`. Testnet: `venue.blindbook-dev.testnet`.
+- `params.quote_max_age_s` (optional, default `120`): the most a 1Click quote's `timestamp` may differ from the enclave clock. `0` turns the check off.
+- `network` must be the build's network (`testnet` by default, `mainnet` with the `mainnet` feature). Otherwise the result is `network_mismatch`.
+- Bounds, otherwise `bad_input`:
+  - at most 8 markets and 64 orders per input
+  - `max_lots_per_side` from 1 to 6
+  - `max_sub_batches` from 1 to 16
+  - `fee_bps` ≤ 1000, `deadline_margin_s` ≤ 86400
+- The batch time is the later of `now_ns` and the enclave clock.
+
+**Result additions (`op: "batch"`)**
+- `input_sha256`: hex sha256 of the exact `input_data` bytes. The pool can compare it with what it sent, so a result can't be replayed onto another batch.
+- `now_ns`: the batch time used.
+- `deferred`: orders neither ingested nor rejected. They stay pending at the pool and come back next batch. This happens when the book is full or a verifier check got no answer.
+- Per `batches[]` entry:
+  - `sub_batches`: how many of this market's sub-batches are in `settle`.
+  - `dropped`: one reason per sub-batch that crossed but was left out: `simulate_failed`, `simulate_unavailable` or `venue_inventory`.
+  - `skipped`: `null` or one of `quote_unavailable`, `quote_unverified`, `quote_stale`, `bad_reference`, `no_cross`, `rpc_unavailable`.
+  - `matched_lots`, `base_volume`, `quote_volume`, `rebated` and `venue_fee` count only the sub-batches in `settle`.
+- `error` appears only on failure. A failed result has empty `ingested`, `rejected`, `deferred`, `batches` and `settle`, `book: null`, and leaves the stored book untouched. Codes: `bad_input`, `network_mismatch`, `storage_unavailable`, `book_corrupt`, `book_conflict`, `book_too_large`, `key_unavailable`, `rng_unavailable`, `clock_invalid`, `host_error`, `internal`.
+- Reject reasons stay generic: `invalid`, `expired`, `unsupported_market`.
+
+**Signed bytes.** `sig` = ed25519 (RFC 8032) by the `result` host key over the 32 bytes `sha256(result)`. Here `result` is the UTF-8 string exactly as it appears in the output. The pool checks `env::ed25519_verify(sig, env::sha256_array(result.as_bytes()), pinned_key)`. If the result can't be signed at all, the output is `{"error":"<code>"}` with no `sig`, and the pool must treat it as a failed batch.
+
+**Settlement rules**
+- The venue payload's deadline and nonce deadline are the batch time + 180 s. Its salt is the verifier's `current_salt`.
+- `max_sub_batches` caps sub-batches across all markets, in input order. Crossed lots beyond the cap stay resting and are not reported.
+- A lot leaves the book (goes in flight) only when its sub-batch passes `simulate_intents`.
+- An in-flight lot whose nonce is used counts as filled. An in-flight lot whose nonce is unused goes back to the book only after its venue deadline + 30 s, since its sub-batch might still settle until then.
+- When a sub-batch panics in simulation, each of its lots is simulated alone. An order whose lot can't run alone gets a strike, and three strikes drop the order.
+- The venue's own base dust (and any quote shortfall) is budgeted against its verifier balance across all included sub-batches.
+
 ## 4. Venue
 
 The venue is a verifier account whose only signing key is held by the enclave. In each sub-batch it signs:

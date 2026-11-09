@@ -1,0 +1,41 @@
+[package]
+name = "blindbook-matcher"
+version = "0.1.0"
+description = "Blindbook matcher: the OutLayer TEE module that opens, validates, crosses and settles sealed orders"
+edition.workspace = true
+license.workspace = true
+build = "build.rs"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "blindbook-matcher"
+path = "src/main.rs"
+
+[features]
+default = []
+# Pin the mainnet pool (`pool.blindbook.near`) and network. Without it the
+# build targets testnet (`pool.blindbook-dev.testnet`). `BLINDBOOK_POOL` at
+# build time overrides the pool account either way.
+mainnet = []
+# Testnet-only check build: no `callers` gate, so the owner can run the module
+# directly before the pool contract exists. Never publish it to the real project.
+scratch = []
+
+[dependencies]
+blindbook-core = { path = "../crates/core" }
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "0.10"
+bs58 = "0.5"
+base64 = "0.22"
+
+[target.'cfg(target_os = "wasi")'.dependencies]
+outlayer = { version = "0.2.1", features = ["signing-keys", "encryption-keys"] }
+wasi = "0.13"
+
+[dev-dependencies]
+ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
+k256 = { version = "0.13", default-features = false, features = ["ecdsa", "std"] }
+sha3 = "0.10"
