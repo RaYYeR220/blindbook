@@ -235,4 +235,5 @@ export interface PoolConfig {
   next_batch_id: number;
 }
 
+export * from "./verify.js";
 export type { LotDraft, Market, Network, Side };
