@@ -1,0 +1,64 @@
+{
+  "market": {
+    "id": "wnear-usdc",
+    "base": "nep141:wrap.near",
+    "quote": "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+    "lot": "100000000000000000000000"
+  },
+  "verifier": "intents.near",
+  "sell": {
+    "v": 1,
+    "market": "wnear-usdc",
+    "owner": "6e7a1cdd29b0b78fd13af4c5598feff4ef2a97166e3ca6f2e4fbfccd80505bf1",
+    "side": "sell",
+    "min_lots": 1,
+    "lots": [
+      {
+        "index": 0,
+        "limit_quote": "354000",
+        "intent": {
+          "standard": "nep413",
+          "payload": {
+            "message": "{\"signer_id\":\"6e7a1cdd29b0b78fd13af4c5598feff4ef2a97166e3ca6f2e4fbfccd80505bf1\",\"deadline\":\"2030-01-01T00:00:00.000Z\",\"intents\":[{\"intent\":\"token_diff\",\"diff\":{\"nep141:wrap.near\":\"-100000000000000000000000\",\"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\":\"354000\"}}]}",
+            "nonce": "Vij2xgAlKBKzAADVNTPoRhoBAQEBAQEBAQEBAQEBAQE=",
+            "recipient": "intents.near"
+          },
+          "public_key": "ed25519:8SFqwqnq4whPhs8icwHA2hQg3hUoN1qrCLK1SBx3WKwe",
+          "signature": "ed25519:5J5coUz4pGg1NoLXtZzZyUHxMozEtb7kJHJNZw7zAJKFJtkshLa8Y2Cc6PSw5mURNdHipiYvKbAdgcdh25iimMtX"
+        }
+      },
+      {
+        "index": 1,
+        "limit_quote": "355000",
+        "intent": {
+          "standard": "nep413",
+          "payload": {
+            "message": "{\"signer_id\":\"6e7a1cdd29b0b78fd13af4c5598feff4ef2a97166e3ca6f2e4fbfccd80505bf1\",\"deadline\":\"2030-01-01T00:00:00.000Z\",\"intents\":[{\"intent\":\"token_diff\",\"diff\":{\"nep141:wrap.near\":\"-100000000000000000000000\",\"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\":\"355000\"}}]}",
+            "nonce": "Vij2xgAlKBKzAADVNTPoRhoCAgICAgICAgICAgICAgI=",
+            "recipient": "intents.near"
+          },
+          "public_key": "ed25519:8SFqwqnq4whPhs8icwHA2hQg3hUoN1qrCLK1SBx3WKwe",
+          "signature": "ed25519:2cReTk6PJ4SM15F736XduYhdompoJUjcCyTKJR7uK5iXxZ7wW62LrqQbcSuPUNQ1YC3nkpZ4fwgfYfJLou8aCQxf"
+        }
+      }
+    ]
+  },
+  "buy": {
+    "v": 1,
+    "market": "wnear-usdc",
+    "owner": "0x58da990a8f4a3a6ca7cb6315d68a140105917352",
+    "side": "buy",
+    "min_lots": 1,
+    "lots": [
+      {
+        "index": 0,
+        "limit_quote": "360000",
+        "intent": {
+          "standard": "erc191",
+          "payload": "{\"signer_id\":\"0x58da990a8f4a3a6ca7cb6315d68a140105917352\",\"verifying_contract\":\"intents.near\",\"deadline\":\"2030-01-01T00:00:00.000Z\",\"nonce\":\"Vij2xgAlKBKzAADVNTPoRhoLCwsLCwsLCwsLCwsLCws=\",\"intents\":[{\"intent\":\"token_diff\",\"diff\":{\"nep141:wrap.near\":\"100000000000000000000000\",\"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1\":\"-360000\"}}]}",
+          "signature": "secp256k1:N4hupr6mrC4Lci1oeLCyEdRXvjcqc6M2LkzpyNup7AW4NcEBtnJSWx3ThzPLgFz9mV1jmZKGJJ7EucABEifbYWPYk"
+        }
+      }
+    ]
+  }
+}
