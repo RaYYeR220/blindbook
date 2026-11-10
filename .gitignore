@@ -24,3 +24,5 @@ credentials/
 coverage/
 .idea/
 .vscode/
+
+.vercel

@@ -137,6 +137,10 @@ pnpm -r test
 - **Small lots on testnet today.** The full path runs on NEAR testnet against a deployment of the same verifier code as `intents.near`, with a mainnet reference price. The mainnet deployment uses 0.1 NEAR lots.
 - **One signature per lot from wallets.** NEAR and EVM wallets sign each lot separately today. Agents and scripts sign locally.
 
+## Also by us at NEAR HACKATHON
+
+[CHAIR](https://github.com/RaYYeR220/chair), a memecoin that runs its own central bank: a TEE model rules on its rates every day, and the token contract verifies the signature itself and clamps the ruling to a constitution fixed at launch.
+
 ## License
 
 MIT
