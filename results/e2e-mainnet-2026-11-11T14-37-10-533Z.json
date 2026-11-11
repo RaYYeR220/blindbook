@@ -1,0 +1,87 @@
+{
+  "at": "2026-11-11T14:37:10.533Z",
+  "network": "mainnet",
+  "pool": "pool.blindbook.near",
+  "verifier": "intents.near",
+  "reference_mid": 3.736973974148,
+  "lots": 1,
+  "lots_filled": 1,
+  "txs": {
+    "sell": "BKnYxV2jqgoJ53ZmV5fNgauCqhxRHczfpTspHLf6eAw2",
+    "buy": "3W1X5bdLFqsQ38Bq7wHo3cb3ykovuXtsTUQPeP4iuFxi",
+    "run_batch": "5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ"
+  },
+  "batch": {
+    "id": "2",
+    "op": "batch",
+    "cranker": "demo.blindbook.near",
+    "orders": [
+      "0",
+      "1"
+    ],
+    "input_bytes": 6403,
+    "input_hash": "e4be700e8f30f0c0fd171e67764498dad6e482f2dc9d28f8ce5c06de5fbbbd76",
+    "deposit": "5000000000000000000000",
+    "requested_block": 224078600,
+    "requested_at": "1794407815501136593",
+    "finished_at": "1794407825895098719",
+    "status": "settled",
+    "error": null,
+    "result_hash": "7bb20121b028f39131cb1fabd7162f600d5ce828a89d4d82ef14226b2a74f0f0",
+    "ingested": [
+      "0",
+      "1"
+    ],
+    "rejected": [],
+    "deferred": [],
+    "refunded": "45990000000000000000000",
+    "markets": [
+      {
+        "market": "wnear-usdc",
+        "mid": {
+          "quote": "37325360988411",
+          "base": "10000000000000000000000000000000"
+        },
+        "lot_mid_quote": "373253",
+        "matched_lots": 1,
+        "base_volume": "100000000000000000000000",
+        "quote_volume": "373253",
+        "rebated": "3365",
+        "venue_fee": "372",
+        "quotes": [
+          "Gjzg5SXE9rrUdWhqcATyiPFy9iPceTBxNDkDCJREAbfD",
+          "8ZwxNWghGydKoCxa5ZM79i46BWR8P2RowB94G9XDHPLZ"
+        ],
+        "sub_batches": 1,
+        "dropped": [],
+        "skipped": null
+      }
+    ],
+    "book": {
+      "orders": 2,
+      "lots": 2
+    },
+    "sub_batches": 1,
+    "dispatched": 1,
+    "settled": [
+      true
+    ],
+    "keys": null
+  },
+  "seller": {
+    "account": "house.blindbook.near",
+    "base_delta": "-100000000000000000000000",
+    "quote_delta": "373067"
+  },
+  "buyer": {
+    "account": "demo.blindbook.near",
+    "base_delta": "100000000000000000000000",
+    "quote_delta": "-373439"
+  },
+  "checks": {
+    "seller_got_at_least_limit": true,
+    "buyer_paid_at_most_limit": true,
+    "seller_effective_price": "3.73067",
+    "buyer_effective_price": "3.73439"
+  }
+}

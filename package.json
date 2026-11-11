@@ -8,6 +8,7 @@
     "build": "pnpm -r build",
     "baseline": "tsx scripts/baseline.ts",
     "e2e:testnet": "tsx scripts/e2e-testnet.ts",
+    "e2e:mainnet": "tsx scripts/e2e-testnet.ts --mainnet",
     "verify:batch": "tsx scripts/verify-batch.ts",
     "readme": "tsx scripts/render-readme.ts"
   },

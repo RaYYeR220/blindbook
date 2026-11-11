@@ -3,6 +3,8 @@
  *
  *   pnpm verify:batch <batch-id> [--tx <crank tx hash> --sender <cranker>] [--request <outlayer id>] [--mainnet]
  *
+ * POOL=<account> checks a pool other than the network's default one.
+ *
  * Checks the matcher's result signature was accepted on-chain, both legs
  * settled on the verifier, the price came from signed 1Click quotes, the
  * enclave ran the pinned build on exactly the input the pool sent (Intel TDX
@@ -21,7 +23,8 @@ if (!batch) {
   console.error("usage: pnpm verify:batch <batch-id> [--tx <hash> --sender <account>] [--request <id>] [--mainnet]");
   process.exit(2);
 }
-const network = args.includes("--mainnet") ? MAINNET : TESTNET;
+const base = args.includes("--mainnet") ? MAINNET : TESTNET;
+const network = { ...base, ...(process.env.POOL ? { pool: process.env.POOL } : {}) };
 const tx = flag("tx");
 const sender = flag("sender");
 const requestId = flag("request") ?? (tx && sender ? await requestIdFromTx(network, tx, sender) : undefined) ?? undefined;
