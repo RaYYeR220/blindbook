@@ -109,6 +109,7 @@ The full message formats are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
 - **OutLayer**: verifiable off-chain execution in Intel TDX, called from the pool via yield/resume. Its project-bound keys hold the order-decryption key and the venue's signing key, and nobody else can obtain them.
 - **NEAR accounts**: NEP-413 signatures from NEAR wallets. EVM wallets sign ERC-191 as implicit `0x` accounts.
 - **NEAR contract** (`near-sdk` 5.30) with `env::ed25519_verify` checking the enclave's result before anything settles.
+- **NEAR AI Cloud**: the private broker in `/app` turns a plain-language mandate ("sell 3 lots over the next hour, never below 3.40") into a lot plan with GLM 5.3 Flash running in a TEE. Before each answer it attests the model fresh: the TDX quote must carry our nonce and the signing address, NVIDIA's GPU attestation must pass, and the answer must be signed by that address. The plan is only a suggestion; the trader still signs every lot.
 
 ## Tests
 
