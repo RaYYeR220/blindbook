@@ -1,5 +1,4 @@
 import { fmtDay, fmtPrice } from "@/lib/content/format";
-import { NETWORK } from "@/lib/content/proof";
 import type { BatchProof } from "@/lib/content/results";
 import { type Step, StepScenes } from "./StepScenes";
 
@@ -61,7 +60,7 @@ export function HowItCrosses({ proof }: { proof: BatchProof }) {
           labels={{ sellLimit: fmtPrice(proof.sellLimit, 4), mid: `mid ${fmtPrice(proof.mid, 5)}` }}
         />
         <p className="fine">
-          Prices in the scenes are from batch {proof.id} on {NETWORK.label}, {fmtDay(proof.at)}. Tile positions are
+          Prices in the scenes are from batch {proof.id} on {proof.net.label}, {fmtDay(proof.at)}. Tile positions are
           illustrative.
         </p>
 

@@ -85,7 +85,7 @@ This needs no permission from the venue.
 | `on_settled(batch_id)` | private | Records which sub-batches settled and emits `batch_settled`. |
 | views | — | `get_config`, `get_markets`, `get_matcher_key`, `get_pending`, `get_batch`, `get_batches`, `get_stats` |
 
-The matcher runs as an OutLayer **project**, pinned to one wasm hash (`version_key`). Its keys are bound to the pool contract as the calling predecessor, so nobody else can obtain them by running the same code.
+The matcher runs as an OutLayer **project**, pinned to one wasm hash (`version_key`). Its keys are bound to the pool contract as the calling predecessor, so nobody else can obtain them by running the same code. The deployed projects are listed in §5.
 
 ## 3. Matcher I/O
 
@@ -158,7 +158,7 @@ Everything in `input_data` and in the result is public on chain:
 Implemented by `matcher/` (`blindbook-matcher`). These fields extend §3.1 and §3.2.
 
 **Input additions**
-- `venue_account` (required for `batch`): the verifier account the venue signs as. The `venue` key from `op: "keys"` must be registered on it with `add_public_key`. Testnet: `venue.blindbook-dev.testnet`.
+- `venue_account` (required for `batch`): the verifier account the venue signs as. The `venue` key from `op: "keys"` must be registered on it with `add_public_key`. Mainnet: `venue.blindbook.near`. Testnet: `venue.blindbook-dev.testnet`.
 - `params.quote_max_age_s` (optional, default `120`): the most a 1Click quote's `timestamp` may differ from the enclave clock. `0` turns the check off.
 - `network` must be the build's network (`testnet` by default, `mainnet` with the `mainnet` feature). Otherwise the result is `network_mismatch`.
 - Bounds, otherwise `bad_input`:
@@ -197,3 +197,18 @@ The venue is a verifier account whose only signing key is held by the enclave. I
 2. one `transfer` per trader, returning their price improvement minus the venue fee.
 
 The venue holds a small balance of each token to cover fee dust.
+
+## 5. Deployments
+
+| | Mainnet | Testnet |
+| --- | --- | --- |
+| Pool | `pool.blindbook.near` | `pool.blindbook-dev.testnet` |
+| Pool code, sha256 | `9f52588546dd689d54848e28046569a63ed5260f3c6ca4692368526ac2dc14f6` | the same bytes |
+| OutLayer project | `blindbook.near/blindbook-matcher` on `outlayer.near` | `blindbook-dev.testnet/blindbook-matcher` on `outlayer.testnet` |
+| `version_key` (matcher wasm sha256) | `435b786312128aefc2a0a60ffa4d0232a22cfcf0ad31e492075519b909467bc9` | `a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980` |
+| Manifest `callers` | `pool.blindbook.near` | `pool.blindbook-dev.testnet` |
+| Venue account and key | `venue.blindbook.near`, `ed25519:64XvgXXDj62HyW3p7yTFt4ZuAuVjQKj5nTXHPERxJ5SX` | `venue.blindbook-dev.testnet`, `ed25519:9NiVPnMqhCj1WCWMzTq2cAk1D1GFiWrXqwTyVsVD8jED` |
+| Verifier | `intents.near` | `intents-bbcced2c.testnet` |
+| Market, lot | `wnear-usdc`, 0.1 NEAR | `tnear-tusdc`, 1 tNEAR |
+
+The two matcher builds come from the same source. The mainnet one is built with the `mainnet` feature, which pins `network` and the pool in the manifest. `pool.get_config()` returns the live `version_key`, result key and venue key for either pool.

@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { BASELINE_FILE, BATCH, NETWORK } from "./proof";
+import { BASELINE_FILE, type Deployment, type PinnedBatch, verifyCommand } from "./proof";
 
 /**
  * Typed readers for the measurement files in the repo's `results/` folder.
@@ -12,6 +12,12 @@ import { BASELINE_FILE, BATCH, NETWORK } from "./proof";
 const RESULTS = join(process.cwd(), "..", "..", "results");
 
 const readJson = <T>(file: string): T => JSON.parse(readFileSync(join(RESULTS, file), "utf8")) as T;
+
+/** Exact decimal value of an integer amount in base units (dividing a Number would give 0.09999999999999999). */
+const units = (v: bigint, decimals: number) => {
+  const s = v.toString().padStart(decimals + 1, "0");
+  return Number(`${s.slice(0, -decimals)}.${s.slice(-decimals)}`);
+};
 
 // ---------------------------------------------------------------- baseline
 
@@ -105,7 +111,13 @@ interface E2eFile {
   batch: {
     id: string;
     result_hash: string | null;
-    markets: { mid: { quote: string; base: string } | null; quotes: string[] }[];
+    markets: {
+      mid: { quote: string; base: string } | null;
+      /** the mid for one lot, in quote units, as the batch settled it */
+      lot_mid_quote?: string;
+      venue_fee?: string;
+      quotes: string[];
+    }[];
   } | null;
   seller: { account: string; base_delta: string; quote_delta: string };
   buyer: { account: string; base_delta: string; quote_delta: string };
@@ -119,6 +131,7 @@ interface E2eFile {
 
 export interface BatchProof {
   id: number;
+  net: Deployment;
   at: string;
   pool: string;
   /** lots filled on each side, and the size of one lot in NEAR */
@@ -133,30 +146,37 @@ export interface BatchProof {
   sellerBps: number;
   buyerBps: number;
   withinLimits: boolean;
+  /** decimals to show limits and fills with: 5 when the signed limits are known exactly, else 4 */
+  priceDigits: number;
+  /** the venue's fee for the whole batch, in USDC, when the run record has it */
+  venueFee: number | null;
   txs: { sell: string; buy: string; crank: string };
   quoteDigests: readonly string[];
   resultHash: string;
   outlayerRequest: number;
-  accounts: { seller: string; buyer: string };
+  accounts: { seller: string; buyer: string; cranker: string };
+  /** `pnpm verify:batch …` for this batch */
+  verify: string;
 }
 
 /**
- * The e2e run for the batch pinned in proof.ts. Files are scanned newest
- * first, so a later run of the same batch wins; a run of some other batch is
- * skipped until proof.ts points at it, which keeps the ids on the page in
- * step with the numbers.
+ * The e2e run for a batch pinned in proof.ts. Files are scanned newest first,
+ * so a later run of the same batch wins; a run of some other batch is skipped
+ * until proof.ts points at it, which keeps the ids on the page in step with
+ * the numbers.
  */
-export function loadBatchProof(): BatchProof {
+export function loadBatchProof(batch: PinnedBatch): BatchProof {
+  const net = batch.net;
   const files = readdirSync(RESULTS)
-    .filter((f) => f.startsWith(`e2e-${NETWORK.id}-`) && f.endsWith(".json"))
+    .filter((f) => f.startsWith(`e2e-${net.id}-`) && f.endsWith(".json"))
     .sort()
     .reverse();
-  if (!files.length) throw new Error(`No results/e2e-${NETWORK.id}-*.json run found`);
+  if (!files.length) throw new Error(`No results/e2e-${net.id}-*.json run found`);
   const runs = files.map((f) => readJson<E2eFile>(f));
-  const run = runs.find((r) => r.txs.run_batch === BATCH.crankTx);
+  const run = runs.find((r) => r.txs.run_batch === batch.crankTx);
   if (!run) {
     throw new Error(
-      `No e2e run in results/ cranked ${BATCH.crankTx}. Point BATCH in src/lib/content/proof.ts at the run to show.`,
+      `No e2e run in results/ cranked ${batch.crankTx}. Point the batch in src/lib/content/proof.ts at the run to show.`,
     );
   }
 
@@ -166,35 +186,47 @@ export function loadBatchProof(): BatchProof {
     throw new Error(`e2e run ${run.at} has no fills`);
   }
 
-  // The pool's record carries the mid; older runs lack it, and both fills sit
-  // the same fee away from the mid on either side, so their average is the mid.
-  const market = run.batch?.markets[0];
-  const recordedMid = market?.mid
-    ? (Number(market.mid.quote) / Number(market.mid.base)) * 10 ** (NETWORK.baseDecimals - NETWORK.quoteDecimals)
-    : null;
-  const mid = recordedMid ?? (sellerPrice + buyerPrice) / 2;
-  const band = BATCH.limitBandBps / 10_000;
   const lots = run.lots_filled;
-  const lotNear = Number(BigInt(run.buyer.base_delta) / BigInt(lots)) / 10 ** NETWORK.baseDecimals;
+  const lotNear = units(BigInt(run.buyer.base_delta) / BigInt(lots), net.baseDecimals);
+  const quoteUnit = 10 ** net.quoteDecimals;
+
+  // The pool's record carries the mid the lot settled at; older runs lack it,
+  // and both fills sit the same fee away from the mid on either side, so their
+  // average is the mid.
+  const market = run.batch?.markets[0];
+  const recordedMid = market?.lot_mid_quote
+    ? Number(market.lot_mid_quote) / quoteUnit / lotNear
+    : market?.mid
+      ? (Number(market.mid.quote) / Number(market.mid.base)) * 10 ** (net.baseDecimals - net.quoteDecimals)
+      : null;
+  const mid = recordedMid ?? (sellerPrice + buyerPrice) / 2;
+  const band = batch.limitBandBps / 10_000;
+  const quoteDigests = market?.quotes.length ? market.quotes : batch.quoteDigests;
+  const resultHash = run.batch?.result_hash ?? batch.resultHash;
+  if (!quoteDigests || !resultHash) throw new Error(`e2e run ${run.at} has no batch record; pin its digests in proof.ts`);
 
   return {
-    id: run.batch ? Number(run.batch.id) : BATCH.id,
+    id: run.batch ? Number(run.batch.id) : batch.id,
+    net,
     at: run.at,
     pool: run.pool,
     lots,
     lotNear,
     mid,
-    sellLimit: run.reference_mid * (1 - band),
-    buyLimit: run.reference_mid * (1 + band),
+    sellLimit: batch.signedLimits?.sell ?? run.reference_mid * (1 - band),
+    buyLimit: batch.signedLimits?.buy ?? run.reference_mid * (1 + band),
     sellerPrice,
     buyerPrice,
     sellerBps: ((mid - sellerPrice) / mid) * 10_000,
     buyerBps: ((buyerPrice - mid) / mid) * 10_000,
     withinLimits: run.checks.seller_got_at_least_limit && run.checks.buyer_paid_at_most_limit,
+    priceDigits: batch.signedLimits ? 5 : 4,
+    venueFee: market?.venue_fee ? Number(market.venue_fee) / quoteUnit : null,
     txs: { sell: run.txs.sell, buy: run.txs.buy, crank: run.txs.run_batch },
-    quoteDigests: market?.quotes.length ? market.quotes : BATCH.quoteDigests,
-    resultHash: run.batch?.result_hash ?? BATCH.resultHash,
-    outlayerRequest: BATCH.outlayerRequest,
-    accounts: { seller: run.seller.account, buyer: run.buyer.account },
+    quoteDigests,
+    resultHash,
+    outlayerRequest: batch.outlayerRequest,
+    accounts: { seller: run.seller.account, buyer: run.buyer.account, cranker: batch.cranker },
+    verify: verifyCommand(batch),
   };
 }

@@ -11,8 +11,10 @@ export const NETWORK_LABEL = IS_TESTNET ? "NEAR testnet" : "NEAR mainnet";
 
 const EXPLORER = IS_TESTNET ? "https://testnet.nearblocks.io" : "https://nearblocks.io";
 const OUTLAYER = IS_TESTNET ? "https://testnet-api.outlayer.ai" : "https://api.outlayer.ai";
-/** Where the matcher build is published; only the testnet store exists so far. */
-const WASM_STORE = IS_TESTNET ? "https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet" : null;
+/** Where the matcher build is published. */
+const WASM_STORE: string | null = IS_TESTNET
+  ? "https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet"
+  : "https://main.fastfs.io/blindbook.near/outlayer.near";
 
 export const txUrl = (hash: string) => `${EXPLORER}/txns/${hash}`;
 export const accountUrl = (account: string) => `${EXPLORER}/address/${account}`;

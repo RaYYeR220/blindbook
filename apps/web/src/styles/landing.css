@@ -96,6 +96,16 @@
   line-height: 1.6;
   color: var(--color-ink-3);
 }
+.landing .proof > * {
+  display: block;
+}
+.landing .proof-live {
+  color: var(--color-ink-2);
+  text-decoration: none;
+}
+.landing .proof-live:hover {
+  color: var(--color-lime);
+}
 /* hover tooltip on the wall */
 .landing .tip {
   position: absolute;
@@ -992,6 +1002,74 @@
   background: var(--color-lime);
   vertical-align: 2px;
 }
+.landing .facts dd + dd {
+  margin-top: 16px;
+}
+.landing .live a {
+  text-decoration: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.3);
+}
+.landing .live a:hover {
+  border-color: var(--color-lime);
+}
+/* the verify command, under the rail and beside the second batch */
+.landing .verify {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 20px 48px;
+  align-items: center;
+  margin: -36px 0 84px;
+}
+.landing .verify-card {
+  margin-top: 0;
+}
+.landing .verify-card pre {
+  padding: 20px 28px 22px;
+  font-size: 13px;
+  line-height: 1.6;
+  /* the whole command stays visible: wrap at spaces, and inside the tx hash if it must */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.landing .verify-note {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--color-ink-2);
+}
+.landing .also {
+  margin-top: 88px;
+  padding-top: 28px;
+  border-top: 1px solid var(--color-hair);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 24px 48px;
+  align-items: start;
+}
+.landing .also .h3 {
+  font-size: 17px;
+  line-height: 1.3;
+}
+.landing .also-copy p {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--color-ink-2);
+}
+.landing .also .ck-data {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.landing .also .ck-data a {
+  text-decoration: none;
+}
+.landing .also .ck-data a code {
+  border-bottom: 1px solid rgb(255 255 255 / 0.3);
+}
+.landing .also .ck-data a:hover code {
+  border-color: var(--color-lime);
+}
 /* ---------- 4. agents ---------- */
 .landing .agents {
   display: grid;
@@ -1231,6 +1309,10 @@
   }
   .landing .code-card {
     max-width: 720px;
+  }
+  .landing .verify,
+  .landing .also {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 860px) {

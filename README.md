@@ -2,7 +2,15 @@
 
 **Sell size without being seen.** Blindbook is a block-crossing venue, a dark pool, for NEAR Intents. You seal a block at your own limit. Each batch, a matcher running inside an Intel TDX enclave crosses it with the other side at a midpoint signed by 1Click, and both legs settle in one `execute_intents` call on the NEAR Intents verifier. Nobody sees a resting order: not other traders, not solvers, not us.
 
-**Live:** [blindbook-phi.vercel.app](https://blindbook-phi.vercel.app) · try a cross with no wallet at [/app](https://blindbook-phi.vercel.app/app) · re-check any batch with `pnpm verify:batch`.
+<!-- mainnet:start -->
+**Live on NEAR mainnet.** Batch 2 on `pool.blindbook.near` crossed one 0.1 NEAR lot a side at the signed 1Click midpoint. Both legs settled in one call on `intents.near`: [`5HgpGzUb…`](https://nearblocks.io/txns/5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ). The seller got 3.73067 USDC per NEAR and the buyer paid 3.73439, around a lot mid of 3.73253, both inside their signed limits. The venue fee was 0.000372 USDC. *(Run record: [`results/e2e-mainnet-2026-11-11T14-37-10-533Z.json`](results/e2e-mainnet-2026-11-11T14-37-10-533Z.json).)* Re-check it from public sources:
+
+```bash
+pnpm verify:batch 2 --tx 5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ --sender demo.blindbook.near --mainnet
+```
+<!-- mainnet:end -->
+
+**Try it:** [blindbook-phi.vercel.app](https://blindbook-phi.vercel.app) · cross a lot with no wallet at [/app](https://blindbook-phi.vercel.app/app). The free demo runs on testnet; the same code runs on mainnet, batch 2.
 
 <!-- numbers:start -->
 On the public NEAR Intents route, selling **150,000 NEAR (~$532,000)** cost **101.8 bps (about $5,400)** against the midpoint, and from **200,000 NEAR** the solvers answered `No liquidity available`. Blindbook crosses the same block at the midpoint for a venue fee of at most 5 bps, taken only out of price improvement. *(1Click dry quotes, measured 2026-11-09, [`results/baseline-2026-11-09.json`](results/baseline-2026-11-09.json).)*
@@ -38,14 +46,18 @@ trader ──seal──▶ pool (NEAR) ──run_batch──▶ OutLayer · Inte
 <!-- try:start -->
 **Hosted demo: [blindbook-phi.vercel.app/app](https://blindbook-phi.vercel.app/app).** Press **Sell 1 lot in the dark** or **Buy 1 lot in the dark**. A server-held demo account seals one lot, a house account rests the other side, and the batch cranks. About 25 seconds later you see the batch print, the settlement transaction, and both legs filled at the midpoint within their limits. No wallet, no funds, no install.
 
-**From a terminal, on testnet:**
+**From a terminal:**
 
 ```bash
 pnpm install
 pnpm --filter @blindbook/sdk build && pnpm --filter @blindbook/client build
 pnpm baseline        # measure the public route's cost curve now -> results/baseline-<date>.json
-pnpm e2e:testnet     # seal two opposite orders, crank one batch, check both legs settled at the mid
+
+# re-check the first mainnet batch, then a testnet batch
+pnpm verify:batch 2 --tx 5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ --sender demo.blindbook.near --mainnet
 pnpm verify:batch 9 --tx 8Qa2X8buwY86ztwXvrSk6rBNRNV2hReQzEHe82MPgMUa --sender blindbook-crank-e4c061.testnet
+
+pnpm e2e:testnet     # seal two opposite orders, crank one batch, check both legs settled at the mid
 ```
 
 `pnpm verify:batch` prints seven checks, and every one should read `PASS`:
@@ -58,7 +70,7 @@ pnpm verify:batch 9 --tx 8Qa2X8buwY86ztwXvrSk6rBNRNV2hReQzEHe82MPgMUa --sender b
 6. it ran on exactly the input the pool sent;
 7. the venue key is registered on the verifier.
 
-`pnpm e2e:testnet` needs testnet keys in `~/.near-credentials/testnet/` for the accounts it uses (see the script header).
+`pnpm e2e:testnet` needs testnet keys in `~/.near-credentials/testnet/` for the accounts it uses (see the script header). `pnpm e2e:mainnet` runs the same flow on `pool.blindbook.near` and needs mainnet keys in `~/.near-credentials/mainnet/`.
 <!-- try:end -->
 
 **As an agent (MCP).** Add the server to any MCP client:
@@ -85,7 +97,7 @@ pnpm verify:batch 9 --tx 8Qa2X8buwY86ztwXvrSk6rBNRNV2hReQzEHe82MPgMUa --sender b
 | `blindbook_order_status` | Lots still open versus consumed | yes |
 | `blindbook_cancel_order` | Cancel open lots with cancel tickets on the verifier | yes |
 
-The key never leaves the MCP process. `BLINDBOOK_MAX_LOTS` is a hard cap per order.
+The key never leaves the MCP process. `BLINDBOOK_MAX_LOTS` is a hard cap per order. `BLINDBOOK_NETWORK=mainnet` points the server at `pool.blindbook.near` and `intents.near`.
 
 ## What runs where
 
@@ -101,6 +113,28 @@ The key never leaves the MCP process. `BLINDBOOK_MAX_LOTS` is a hard cap per ord
 | Web app and public demo | Next.js | [`apps/web`](apps/web) |
 
 The full message formats are in [`docs/PROTOCOL.md`](docs/PROTOCOL.md).
+
+## Deployments
+
+The same pool code and the same matcher source run on both networks. The matcher's build differs only by the `mainnet` feature, which pins the network and the pool it answers to.
+
+| | Mainnet | Testnet |
+| --- | --- | --- |
+| Owner | `blindbook.near` | `blindbook-dev.testnet` |
+| Pool | [`pool.blindbook.near`](https://nearblocks.io/address/pool.blindbook.near) | [`pool.blindbook-dev.testnet`](https://testnet.nearblocks.io/address/pool.blindbook-dev.testnet) |
+| Pool code, sha256 | `9f52588546dd689d54848e28046569a63ed5260f3c6ca4692368526ac2dc14f6` | the same bytes |
+| Matcher (OutLayer project) | `blindbook.near/blindbook-matcher` | `blindbook-dev.testnet/blindbook-matcher` |
+| Pinned matcher build, sha256 | [`435b786312128aefc2a0a60ffa4d0232a22cfcf0ad31e492075519b909467bc9`](https://main.fastfs.io/blindbook.near/outlayer.near/435b786312128aefc2a0a60ffa4d0232a22cfcf0ad31e492075519b909467bc9.wasm) | [`a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980`](https://test.fastfs.io/blindbook-dev.testnet/outlayer.testnet/a352985a6807d716158c8aed651af0882aa9da79542911225df129dead02a980.wasm) |
+| Matcher manifest `callers` | `pool.blindbook.near` | `pool.blindbook-dev.testnet` |
+| Venue | `venue.blindbook.near` | `venue.blindbook-dev.testnet` |
+| Venue key, registered on the verifier | `ed25519:64XvgXXDj62HyW3p7yTFt4ZuAuVjQKj5nTXHPERxJ5SX` | `ed25519:9NiVPnMqhCj1WCWMzTq2cAk1D1GFiWrXqwTyVsVD8jED` |
+| House liquidity | `house.blindbook.near` | `house.blindbook-dev.testnet` |
+| Demo account | `demo.blindbook.near` | `demo.blindbook-dev.testnet` |
+| Verifier | `intents.near` | `intents-bbcced2c.testnet` (same defuse 0.4.5 code) |
+| Market and lot | wNEAR/USDC, 0.1 NEAR | tNEAR/tUSDC, 1 tNEAR |
+| Settled batch to check | batch 2, [`5HgpGzUb…`](https://nearblocks.io/txns/5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ), [attestation 2983](https://api.outlayer.ai/attestations/by-request/2983) | batch 9, [`8Qa2X8bu…`](https://testnet.nearblocks.io/txns/8Qa2X8buwY86ztwXvrSk6rBNRNV2hReQzEHe82MPgMUa), [attestation 15030](https://testnet-api.outlayer.ai/attestations/by-request/15030) |
+
+`get_config({})` on either pool returns the pinned build, the result key and the venue key. The hosted demo is built for testnet, so its buttons trade on the testnet pool.
 
 ## NEAR stack used
 
@@ -135,7 +169,7 @@ pnpm -r test
   - It still could not fill anyone worse than their signed limit.
   - It could not move funds the traders did not sign.
   - The pool verifies every result signature on-chain. The TDX attestation for each run is public.
-- **Small lots on testnet today.** The full path runs on NEAR testnet against a deployment of the same verifier code as `intents.near`, with a mainnet reference price. The mainnet deployment uses 0.1 NEAR lots.
+- **Small lots, our own accounts.** Mainnet lots are 0.1 NEAR. In mainnet batch 2 both sides were ours: the house account sold and the demo account bought. It proves the full path on `intents.near`, not outside demand. The free demo runs on testnet, against a deployment of the same verifier code as `intents.near` with a mainnet reference price.
 - **One signature per lot from wallets.** NEAR and EVM wallets sign each lot separately today. Agents and scripts sign locally.
 
 ## Also by us at NEAR HACKATHON

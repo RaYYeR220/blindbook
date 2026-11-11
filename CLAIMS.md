@@ -22,11 +22,13 @@ Every public statement about Blindbook carries a tier:
 | 11 | Blindbook costs a block at most 5 bps against the midpoint when the other side is in the batch | MODELED | The venue fee is capped per side and taken only from price improvement (`crates/core/src/engine.rs`). Whether a block finds the other side depends on liquidity. |
 | 12 | A block of any size finds a counterparty | NOT-CLAIMED | Early liquidity is a labelled house account; outside flow is not guaranteed |
 | 13 | Trades stay private after settlement | NOT-CLAIMED | Fills are public on `intents.near` once they settle |
-| 14 | Mainnet volume | NOT-CLAIMED | Not claimed until the mainnet deployment is live and linked here |
+| 14 | The first mainnet cross settled: batch 2 on `pool.blindbook.near` crossed one 0.1 NEAR lot a side at the signed 1Click mid, and both legs settled in one `execute_intents` call on `intents.near`. The seller (limit 3.71828) received 3.73067 and the buyer (limit 3.75565) paid 3.73439, around a lot mid of 3.73253. The venue fee was 0.000372 USDC. | VERIFIED-LIVE | Tx [`5HgpGzUb…`](https://nearblocks.io/txns/5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ), [OutLayer attestation 2983](https://api.outlayer.ai/attestations/by-request/2983). `pnpm verify:batch 2 --tx 5HgpGzUbGPENVWwcf5kQNgWX2hMCTJSMqrjhGky4UFiZ --sender demo.blindbook.near --mainnet` passes all seven checks. Run record: [`results/e2e-mainnet-2026-11-11T14-37-10-533Z.json`](results/e2e-mainnet-2026-11-11T14-37-10-533Z.json). The limits are the signed `token_diff`s in the tx. |
 | 15 | The private broker's answers come from an attested NEAR AI model: the TDX quote binds a fresh nonce and the signing address, NVIDIA's GPU attestation passes, and the answer is signed by that address | VERIFIED-LIVE | `POST /api/broker` on [blindbook-phi.vercel.app](https://blindbook-phi.vercel.app/app) returns the plan with its three checks (`apps/web/src/lib/server/broker.ts`). The Intel signature chain of the quote is not re-verified. |
+| 16 | Real outside volume on mainnet | NOT-CLAIMED | Both sides of mainnet batch 2 were our own accounts: `house.blindbook.near` sold and `demo.blindbook.near` bought. No outside trader has crossed on mainnet yet. |
 
 ## What is simulated
 
 - **On testnet**, the base and quote tokens are test tokens: `tnear-bbcced2c.testnet` and `tusdc-bbcced2c.testnet`. They settle on a deployment of the same verifier bytecode that runs as `intents.near` (defuse 0.4.5). The reference price is the live **mainnet** wNEAR/USDC midpoint from 1Click.
+- **On mainnet**, batch 2 settled real wNEAR and USDC on `intents.near`, but both sides were our own accounts (claim 16).
 - **The house account** is ours, and it is the counterparty in the public demo.
 - **The matcher's unit and integration tests** run against a mock verifier that enforces signatures, nonces, salts, balances and the fee invariant. The testnet runs above use the real verifier.

@@ -9,17 +9,20 @@ import { RouteVsBook } from "@/components/landing/RouteVsBook";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { fmtCompact, fmtDay, fmtPrice } from "@/lib/content/format";
-import { LINKS, NETWORK, SETTLEMENT_RUNS } from "@/lib/content/proof";
+import { LINKS, MAINNET_BATCH, SETTLEMENT_RUNS, TESTNET_BATCH, txUrl } from "@/lib/content/proof";
 import { loadBaseline, loadBatchProof, routeEdge } from "@/lib/content/results";
 import "@/styles/landing.css";
 
 export default function Home() {
   const baseline = loadBaseline();
-  const proof = loadBatchProof();
+  // The headline proof is the first mainnet batch; testnet batch 9 is the second.
+  const proof = loadBatchProof(MAINNET_BATCH);
+  const testnet = loadBatchProof(TESTNET_BATCH);
   const { largest, refused } = routeEdge(baseline.rows.sell);
 
   const marquee = [
-    `${proof.txs.crank} · batch ${proof.id} · two traders crossed at mid ${fmtPrice(proof.mid, 5)} · both legs · 1 tx`,
+    `${proof.txs.crank} · batch ${proof.id} · ${proof.net.label} · crossed at mid ${fmtPrice(proof.mid, 5)} · both legs · 1 tx`,
+    `${testnet.txs.crank} · batch ${testnet.id} · ${testnet.net.label} · two lots a side at mid ${fmtPrice(testnet.mid, 5)} · 1 tx`,
     ...SETTLEMENT_RUNS.map((r) => `${r.tx} · ${r.note}`),
   ];
 
@@ -30,7 +33,7 @@ export default function Home() {
       </a>
       <SiteHeader overlay />
       <main id="main">
-        <Hero marquee={marquee} marqueeLabel={`Public settlement artefacts, ${NETWORK.label}`}>
+        <Hero marquee={marquee} marqueeLabel="Public settlement artefacts, NEAR mainnet and testnet">
           <h1 className="h1" id="hero-title">
             Your order rests where nobody can read it.
           </h1>
@@ -45,14 +48,19 @@ export default function Home() {
             <WatchBatchButton>Watch a batch settle</WatchBatchButton>
           </div>
           <p className="proof">
-            Measured {fmtDay(baseline.measuredAt)} on the live 1Click route · selling {fmtCompact(largest.near)} NEAR:{" "}
-            {Math.round(largest.costBps)} bps
-            {refused ? ` · ${fmtCompact(refused.near)} NEAR: no liquidity` : null}
+            <a className="proof-live" href={txUrl(proof.txs.crank, proof.net)} target="_blank" rel="noopener">
+              Live on {proof.net.label} · batch {proof.id} crossed at mid {fmtPrice(proof.mid, 5)} · both legs in 1 tx
+            </a>
+            <span>
+              Measured {fmtDay(baseline.measuredAt)} on the live 1Click route · selling {fmtCompact(largest.near)} NEAR:{" "}
+              {Math.round(largest.costBps)} bps
+              {refused ? ` · ${fmtCompact(refused.near)} NEAR: no liquidity` : null}
+            </span>
           </p>
         </Hero>
         <HowItCrosses proof={proof} />
         <RouteVsBook baseline={baseline} proof={proof} />
-        <CheckItYourself proof={proof} />
+        <CheckItYourself proof={proof} second={testnet} />
         <ForAgents />
         <HonestLimits />
         <ClosingCta />

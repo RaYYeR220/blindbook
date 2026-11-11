@@ -1,5 +1,5 @@
 import { fmtCompact, fmtDay, fmtDayYear, fmtInt, fmtTimeUtc, fmtUsd, fmtUsdK } from "@/lib/content/format";
-import { BASELINE_FILE, NETWORK } from "@/lib/content/proof";
+import { BASELINE_FILE } from "@/lib/content/proof";
 import { type Baseline, type BatchProof, type RouteRow, routeEdge, type Side } from "@/lib/content/results";
 import { RouteChart, type RouteRowView, RouteSideProvider, SideToggle } from "./RouteChart";
 
@@ -36,7 +36,7 @@ function rowViews(base: Baseline, proof: BatchProof, bookBps: number): Record<Si
       cost: `≤${bookBps} bps`,
       costNote: "from the mid",
       quote: null,
-      tip: `batch ${proof.id}, ${NETWORK.label} · seller mid − ${Math.round(proof.sellerBps)} bps · buyer mid + ${Math.round(proof.buyerBps)} bps`,
+      tip: `batch ${proof.id}, ${proof.net.label} · seller mid − ${Math.round(proof.sellerBps)} bps · buyer mid + ${Math.round(proof.buyerBps)} bps`,
     });
     return out;
   };
@@ -114,7 +114,7 @@ export function RouteVsBook({ baseline, proof }: { baseline: Baseline; proof: Ba
         <p className="cite">
           Measured {day}, 1Click dry quotes ({fmtTimeUtc(baseline.measuredAt)}, {baseline.pair}
           {baseline.exactInput ? ", exact input" : ""}, against a mid of {baseline.mid}). Source:{" "}
-          <code>blindbook/results/{BASELINE_FILE}</code>. Blindbook&apos;s row is the {NETWORK.id} fill in batch {proof.id}: mid
+          <code>blindbook/results/{BASELINE_FILE}</code>. Blindbook&apos;s row is the {proof.net.id} fill in batch {proof.id}: mid
           − {sb}&nbsp;bps for the seller, mid + {bb}&nbsp;bps for the buyer.
         </p>
       </div>

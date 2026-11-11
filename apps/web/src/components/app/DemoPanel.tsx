@@ -5,13 +5,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/app/api";
 import { getBatch, poolConfig, rememberCrank } from "@/lib/app/chain";
 import { fmtPrice, fmtSignedBps, lotPrice } from "@/lib/app/format";
-import { LOT_LABEL, MARKET } from "@/lib/app/net";
+import { IS_TESTNET, LOT_LABEL, MARKET } from "@/lib/app/net";
 import type { BatchStatus, DemoResponse, PoolConfigView } from "@/lib/app/types";
 import { type Verification, verifyBatch, CHECK_SHORT } from "@/lib/app/verify";
+import { MAINNET_BATCH, txUrl } from "@/lib/content/proof";
 import { useApp } from "./AppContext";
 import { DemoScene } from "./DemoScene";
 import { useNow } from "./hooks";
-import { CheckList, PanelHead, TxLink } from "./ui";
+import { CheckList, Ext, PanelHead, TxLink } from "./ui";
 
 const STEPS = [
   { label: "House rests the other side", note: `one ${LOT_LABEL} lot, 0.6% through the mid` },
@@ -139,6 +140,13 @@ export function DemoPanel() {
       <p className="demo-lede">
         A server-held demo account seals one lot at a limit 0.6% through the mid; the house takes the other side. Watch it
         cross at the verified midpoint, then check the batch yourself.
+        {IS_TESTNET ? (
+          <>
+            {" "}
+            The free demo runs on testnet. The same code runs on mainnet,{" "}
+            <Ext href={txUrl(MAINNET_BATCH.crankTx, MAINNET_BATCH.net)}>batch {MAINNET_BATCH.id}</Ext>.
+          </>
+        ) : null}
       </p>
       <div className="demo-ctas">
         <button type="button" className="btn btn-sell" disabled={busy || cooling} onClick={() => run("sell")}>

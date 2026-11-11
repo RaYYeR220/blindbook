@@ -12,8 +12,8 @@ const LIMITS = [
     body: "A compromised enclave could leak what your order says. It still couldn't fill you worse than the limit you signed.",
   },
   {
-    title: "Live on testnet. Mainnet is pending.",
-    body: "Mainnet lots will be 0.1 NEAR. Until the first mainnet batch settles, everything on this page ran on NEAR testnet.",
+    title: "Live on mainnet, in small lots.",
+    body: "Mainnet lots are 0.1 NEAR. The first mainnet batch crossed one lot a side, with the house account on the other side. The free demo runs on testnet. The same code runs on mainnet, batch 2.",
   },
 ];
 

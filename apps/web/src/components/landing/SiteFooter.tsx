@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/ui/BrandMark";
-import { LINKS, NETWORK } from "@/lib/content/proof";
+import { LINKS, MAINNET, NETWORK } from "@/lib/content/proof";
 
 export function SiteFooter() {
   return (
@@ -11,7 +11,9 @@ export function SiteFooter() {
             <BrandMark />
             Blindbook
           </Link>
-          <p>A dark pool for NEAR Intents. Live on {NETWORK.id}.</p>
+          <p>
+            A dark pool for NEAR Intents. Live on {MAINNET.label}. The free demo runs on {NETWORK.id}.
+          </p>
         </div>
         <nav className="bb-footer-links" aria-label="Footer">
           <a href={LINKS.github} rel="noopener">
