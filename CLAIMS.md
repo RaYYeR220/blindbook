@@ -20,10 +20,10 @@ Every public statement about Blindbook carries a tier:
 | 9 | Settlement batches are fee-exact under the verifier's protocol fee | REPRODUCIBLE | `crates/core/src/settle.rs` reproduces a testnet settlement to the unit, and fuzzes 10,000 batches at 5 fee levels |
 | 10 | Anyone can cancel their open lots without the venue | REPRODUCIBLE | Cancel tickets in `packages/sdk/src/order.ts`. The matcher drops lots whose nonce is consumed (`matcher/tests/reconcile.rs`). |
 | 11 | Blindbook costs a block at most 5 bps against the midpoint when the other side is in the batch | MODELED | The venue fee is capped per side and taken only from price improvement (`crates/core/src/engine.rs`). Whether a block finds the other side depends on liquidity. |
-| 15 | The private broker's answers come from an attested NEAR AI model: the TDX quote binds a fresh nonce and the signing address, NVIDIA's GPU attestation passes, and the answer is signed by that address | VERIFIED-LIVE | `POST /api/broker` on [blindbook-phi.vercel.app](https://blindbook-phi.vercel.app/app) returns the plan with its three checks (`apps/web/src/lib/server/broker.ts`). The Intel signature chain of the quote is not re-verified. |
 | 12 | A block of any size finds a counterparty | NOT-CLAIMED | Early liquidity is a labelled house account; outside flow is not guaranteed |
 | 13 | Trades stay private after settlement | NOT-CLAIMED | Fills are public on `intents.near` once they settle |
 | 14 | Mainnet volume | NOT-CLAIMED | Not claimed until the mainnet deployment is live and linked here |
+| 15 | The private broker's answers come from an attested NEAR AI model: the TDX quote binds a fresh nonce and the signing address, NVIDIA's GPU attestation passes, and the answer is signed by that address | VERIFIED-LIVE | `POST /api/broker` on [blindbook-phi.vercel.app](https://blindbook-phi.vercel.app/app) returns the plan with its three checks (`apps/web/src/lib/server/broker.ts`). The Intel signature chain of the quote is not re-verified. |
 
 ## What is simulated
 
